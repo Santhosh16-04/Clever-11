@@ -11,8 +11,9 @@ import 'package:clever_11/presentation/screens/home/c11_home.dart';
 class PaymentScreen extends StatefulWidget {
   final String contestId;
   final Map<String, dynamic> contestData;
-  
-  const PaymentScreen({super.key, required this.contestId, required this.contestData});
+
+  const PaymentScreen(
+      {super.key, required this.contestId, required this.contestData});
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -29,7 +30,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   double winnings = 20;
   double bonus = 10;
 
-  final List<Map<String, String>> paymentOffers = [ 
+  final List<Map<String, String>> paymentOffers = [
     {
       "logoPath": "assets/bhim_logo.png",
       "title": "BHIM App",
@@ -149,10 +150,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       return;
                     }
                     // Simulate a successful payment
-                    bool paymentSuccess = true; // This should be replaced with actual payment logic
+                    bool paymentSuccess =
+                        true; // This should be replaced with actual payment logic
                     if (paymentSuccess) {
                       // Update the user's "My Contests" list
-                      context.read<MyContestsBloc>().add(AddContestToMyContests(widget.contestId, widget.contestData));
+                      context.read<MyContestsBloc>().add(AddContestToMyContests(
+                          widget.contestId, widget.contestData));
 
                       // Show payment success bottom sheet
                       _showPaymentSuccessBottomSheet(context);
@@ -415,265 +418,271 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget divider() => Divider(color: Colors.grey.shade300, thickness: 1);
 
-void _showPaymentSuccessBottomSheet(BuildContext context) {
-  // Check if this is a wallet add cash scenario or contest payment
-  final isWalletAddCash = widget.contestId == 'wallet_add_cash';
-  
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (BuildContext context) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        decoration: const BoxDecoration(
-          color: Color(0xFF1E824C), // Deep green
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+  void _showPaymentSuccessBottomSheet(BuildContext context) {
+    // Check if this is a wallet add cash scenario or contest payment
+    final isWalletAddCash = widget.contestId == 'wallet_add_cash';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          decoration: const BoxDecoration(
+            color: Color(0xFF1E824C), // Deep green
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: 24),
-          child: Column(
-            children: [
-              // Close button
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      if (isWalletAddCash) {
-                        // If wallet add cash, go back to home screen
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => M11_Home(),
-                          ),
-                          (route) => route.isFirst,
-                        );
-                      } else {
-                        // If contest payment, go back to contest details
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => ContestDetailsScreen(initialTabIndex: 1),
-                          ),
-                          (route) => route.isFirst,
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 24),
+            child: Column(
+              children: [
+                // Close button
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        if (isWalletAddCash) {
+                          // If wallet add cash, go back to home screen
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => M11_Home(),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        } else {
+                          // If contest payment, go back to contest details
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ContestDetailsScreen(initialTabIndex: 1),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.close, color: Colors.white),
                       ),
-                      child: const Icon(Icons.close, color: Colors.white),
                     ),
                   ),
                 ),
-              ),
 
-              // Check Icon with Background Dots
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.15),
-                    ),
-                  ),
-                  Container(
-                    width: 90,
-                    height: 90,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: const Icon(Icons.check, color: Color(0xFF1E824C), size: 50),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // Title
-              const Text(
-                "Payment Successful!",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              Text(
-                "Hooray! You have completed your payment.",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white.withOpacity(0.9),
-                ),
-                textAlign: TextAlign.center,
-              ),
-
-              const SizedBox(height: 30),
-
-              // Amount Paid Card
-              Container(
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
+                // Check Icon with Background Dots
+                Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Text(
-                      "AMOUNT PAID",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white.withOpacity(0.7),
-                        letterSpacing: 1.2,
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.15),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "₹${_controller.text}",
-                      style: const TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: 90,
+                      height: 90,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
                         color: Colors.white,
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.shade600,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(
-                        "₹${(double.tryParse(_controller.text) ?? 0) * 0.1} Cashback",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
+                      child: const Icon(Icons.check,
+                          color: Color(0xFF1E824C), size: 50),
                     ),
                   ],
                 ),
-              ),
 
-              const SizedBox(height: 35),
+                const SizedBox(height: 20),
 
-              const Text(
-                "HOW WAS YOUR PAYMENT EXPERIENCE?",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                // Title
+                const Text(
+                  "Payment Successful!",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildFeedbackButton(
-                    icon: Icons.thumb_up,
-                    bgColor: Colors.white.withOpacity(0.2),
-                    iconColor: Colors.white,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      if (isWalletAddCash) {
-                        // If wallet add cash, go back to home screen
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => M11_Home(),
-                          ),
-                          (route) => route.isFirst,
-                        );
-                      } else {
-                        // If contest payment, go back to contest details
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => ContestDetailsScreen(initialTabIndex: 1),
-                          ),
-                          (route) => route.isFirst,
-                        );
-                      }
-                    },
+                Text(
+                  "Hooray! You have completed your payment.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white.withOpacity(0.9),
                   ),
-                  const SizedBox(width: 24),
-                  _buildFeedbackButton(
-                    icon: Icons.thumb_down,
-                    bgColor: Colors.white,
-                    iconColor: Colors.red,
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      if (isWalletAddCash) {
-                        // If wallet add cash, go back to home screen
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => M11_Home(),
-                          ),
-                          (route) => route.isFirst,
-                        );
-                      } else {
-                        // If contest payment, go back to contest details
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => ContestDetailsScreen(initialTabIndex: 1),
-                          ),
-                          (route) => route.isFirst,
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
+                  textAlign: TextAlign.center,
+                ),
 
-              const SizedBox(height: 30),
-            ],
+                const SizedBox(height: 30),
+
+                // Amount Paid Card
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "AMOUNT PAID",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white.withOpacity(0.7),
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "₹${_controller.text}",
+                        style: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade600,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Text(
+                          "₹${(double.tryParse(_controller.text) ?? 0) * 0.1} Cashback",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 35),
+
+                const Text(
+                  "HOW WAS YOUR PAYMENT EXPERIENCE?",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildFeedbackButton(
+                      icon: Icons.thumb_up,
+                      bgColor: Colors.white.withOpacity(0.2),
+                      iconColor: Colors.white,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        if (isWalletAddCash) {
+                          // If wallet add cash, go back to home screen
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => M11_Home(),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        } else {
+                          // If contest payment, go back to contest details
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ContestDetailsScreen(initialTabIndex: 1),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 24),
+                    _buildFeedbackButton(
+                      icon: Icons.thumb_down,
+                      bgColor: Colors.white,
+                      iconColor: Colors.red,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        if (isWalletAddCash) {
+                          // If wallet add cash, go back to home screen
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => M11_Home(),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        } else {
+                          // If contest payment, go back to contest details
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ContestDetailsScreen(initialTabIndex: 1),
+                            ),
+                            (route) => route.isFirst,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 30),
+              ],
+            ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFeedbackButton({
+    required IconData icon,
+    required Color bgColor,
+    required Color iconColor,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: bgColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 6,
+              offset: const Offset(0, 3),
+            )
+          ],
         ),
-      );
-    },
-  );
-}
-Widget _buildFeedbackButton({
-  required IconData icon,
-  required Color bgColor,
-  required Color iconColor,
-  required VoidCallback onTap,
-}) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          )
-        ],
+        child: Icon(icon, color: iconColor, size: 24),
       ),
-      child: Icon(icon, color: iconColor, size: 24),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildDot() {
     return Container(
