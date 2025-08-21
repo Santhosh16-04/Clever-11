@@ -16,7 +16,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ContestDetailsScreen extends StatefulWidget {
   final int initialTabIndex;
-  const ContestDetailsScreen({Key? key, this.initialTabIndex = 0})
+  final bool openBottomSheet;
+  final dynamic contest;
+  final String? contestId;
+
+  const ContestDetailsScreen(
+      {Key? key,
+      this.initialTabIndex = 0,
+      this.openBottomSheet = false,
+      this.contest,
+      this.contestId})
       : super(key: key);
 
   @override
@@ -101,14 +110,16 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
   Future<void> _handleJoinContestFlow(dynamic contest, String contestId) async {
     // Get current team state and augment with persisted teams to avoid first-launch race conditions
     final teamState = context.read<TeamBloc>().state;
-    List<Map<String, dynamic>> teams = List<Map<String, dynamic>>.from(teamState.teams);
+    List<Map<String, dynamic>> teams =
+        List<Map<String, dynamic>>.from(teamState.teams);
 
     try {
       final prefs = await SharedPreferences.getInstance();
       final teamsJson = prefs.getString('saved_teams');
       if ((teams.isEmpty) && teamsJson != null && teamsJson.isNotEmpty) {
         final List decoded = json.decode(teamsJson) as List;
-        teams = decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        teams =
+            decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
       }
     } catch (_) {}
 
@@ -119,6 +130,8 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
         MaterialPageRoute(
           builder: (context) => M11_CreateTeamScreen(
             source: 'join_contest',
+            contest: contest,
+            contestId: contestId,
           ),
         ),
       );
@@ -177,6 +190,8 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
         MaterialPageRoute(
           builder: (context) => M11_CreateTeamScreen(
             source: 'join_contest',
+            contest: contest,
+            contestId: contestId,
           ),
         ),
       );
@@ -197,6 +212,8 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
             MaterialPageRoute(
               builder: (context) => M11_CreateTeamScreen(
                 source: 'join_contest',
+                contest: contest,
+                contestId: contestId,
               ),
             ),
           );
@@ -209,6 +226,8 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
             MaterialPageRoute(
               builder: (context) => M11_CreateTeamScreen(
                 source: 'join_contest',
+                contest: contest,
+                contestId: contestId,
               ),
             ),
           );
@@ -491,7 +510,8 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
                         final teamId = teamState.teams.first['id'].toString();
                         final myContestsBloc = context.read<MyContestsBloc>();
                         // Use stable contest id to avoid duplicates in My Contests
-                        final stableId = _buildStableContestId(contest, fallbackId: contestId);
+                        final stableId = _buildStableContestId(contest,
+                            fallbackId: contestId);
                         myContestsBloc.add(AddContestToMyContests(
                           stableId,
                           contest,
@@ -553,9 +573,11 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
       if (id != null && id.isNotEmpty) return id;
       final prize = contest['prize']?.toString() ?? '';
       final entry = contest['entry']?.toString() ??
-          contest['discounted_entry']?.toString() ?? '';
+          contest['discounted_entry']?.toString() ??
+          '';
       final spots = contest['spots_left']?.toString() ??
-          contest['total_spots']?.toString() ?? '';
+          contest['total_spots']?.toString() ??
+          '';
       final seed = '${prize}_${entry}_${spots}'.trim();
       if (seed.isNotEmpty) return seed;
       return fallbackId ?? DateTime.now().millisecondsSinceEpoch.toString();
@@ -574,6 +596,7 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
     final match = data!['match'];
     final tabs = data!['tabs'] as List<dynamic>? ?? [];
     final filters = data!['filters'] as List<dynamic>? ?? [];
@@ -955,7 +978,7 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
                                                                   onTap: () {
                                                                     // Create a unique contest ID based on contest properties
                                                                     print(
-                                                                        "CLICKED FOR JOIN CONTEST");  
+                                                                        "CLICKED FOR JOIN CONTEST");
                                                                     final contestId =
                                                                         '${contest['prize'] ?? 'contest'}_${contest['entry'] ?? contest['discounted_entry'] ?? '0'}_${contest['spots_left'] ?? '0'}';
 

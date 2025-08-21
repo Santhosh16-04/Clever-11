@@ -16,15 +16,20 @@ class M11_CreateTeamScreen extends StatefulWidget {
   final String? teamName;
   final int? teamId;
   final String? source; // Add source parameter to track navigation origin
-  const M11_CreateTeamScreen({
-    Key? key,
-    this.initialSelectedPlayerIds,
-    this.initialCaptainId,
-    this.initialViceCaptainId,
-    this.teamName,
-    this.teamId,
-    this.source, // Add source parameter
-  }) : super(key: key);
+  final dynamic contest;
+  final String? contestId;
+
+  const M11_CreateTeamScreen(
+      {Key? key,
+      this.initialSelectedPlayerIds,
+      this.initialCaptainId,
+      this.initialViceCaptainId,
+      this.teamName,
+      this.teamId,
+      this.source, // Add source parameter
+      this.contest,
+      this.contestId})
+      : super(key: key);
 
   @override
   State<M11_CreateTeamScreen> createState() => _M11_CreateTeamScreenState();
@@ -533,7 +538,8 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                           .toList();
                       final initialIndex = filteredPlayers
                           .indexWhere((p) => p['id'] == player['id']);
-                      if (initialIndex >= 0 && initialIndex < filteredPlayers.length) {
+                      if (initialIndex >= 0 &&
+                          initialIndex < filteredPlayers.length) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => PlayerProfileScreen(
@@ -820,9 +826,9 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                   onTap: selectedPlayers > 0
                       ? () {
                           _showClearTeamBottomSheet();
-                        } 
+                        }
                       : null,
-                  child: Opacity( 
+                  child: Opacity(
                     opacity: selectedPlayers > 0 ? 1.0 : 0.4,
                     child: Container(
                       width: 24,
@@ -1108,7 +1114,8 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                               initialCaptainId: widget.initialCaptainId,
                               initialViceCaptainId: widget.initialViceCaptainId,
                               teamId: widget.teamId,
-                              source: widget.source, // Pass the source parameter
+                              source:
+                                  widget.source, // Pass the source parameter
                             ),
                           ),
                         );
@@ -1567,7 +1574,8 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
       isScrollControlled: false,
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
+          padding:
+              const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1941,7 +1949,8 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                               .toList();
                           final initialIndex = filteredPlayers
                               .indexWhere((p) => p['id'] == player['id']);
-                          if (initialIndex >= 0 && initialIndex < filteredPlayers.length) {
+                          if (initialIndex >= 0 &&
+                              initialIndex < filteredPlayers.length) {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => PlayerProfileScreen(
@@ -1950,9 +1959,9 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                               ),
                             );
                           }
-                        },  
+                        },
                         child: Row(
-                          children: const [ 
+                          children: const [
                             Text(
                               'More',
                               style: TextStyle(
@@ -2130,7 +2139,8 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
       isScrollControlled: false,
       builder: (context) {
         return Padding(
-          padding: const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
+          padding:
+              const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
