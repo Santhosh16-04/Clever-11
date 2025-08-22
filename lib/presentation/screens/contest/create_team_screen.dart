@@ -1114,8 +1114,9 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                               initialCaptainId: widget.initialCaptainId,
                               initialViceCaptainId: widget.initialViceCaptainId,
                               teamId: widget.teamId,
-                              source:
-                                  widget.source, // Pass the source parameter
+                              source: widget.source,
+                              contest: widget.contest,
+                              contestId: widget.contestId,
                             ),
                           ),
                         );

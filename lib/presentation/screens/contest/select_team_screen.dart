@@ -1,4 +1,5 @@
 import 'package:clever_11/cubit/team/team_event.dart';
+import 'package:clever_11/presentation/screens/contest/contest_details_screen.dart';
 import 'package:clever_11/routes/m11_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,11 +63,12 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
         // Resolve used teams from props or bloc state for robustness
         final myContestsState = context.watch<MyContestsBloc>().state;
         List<String> usedTeamIds = List<String>.from(widget.teamsUsedInContest);
-        if (usedTeamIds.isEmpty && widget.contestId != null &&
+        if (usedTeamIds.isEmpty &&
+            widget.contestId != null &&
             myContestsState is MyContestsLoaded) {
-          usedTeamIds = myContestsState
-                  .contestTeamMappings[widget.contestId!] ??
-              <String>[];
+          usedTeamIds =
+              myContestsState.contestTeamMappings[widget.contestId!] ??
+                  <String>[];
         }
 
         // Split teams based on whether they are already used in this contest
@@ -139,7 +141,8 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.sports_cricket, size: 64, color: Colors.grey[400]),
+                      Icon(Icons.sports_cricket,
+                          size: 64, color: Colors.grey[400]),
                       SizedBox(height: 16),
                       Text(
                         'No available teams for this contest',
@@ -171,11 +174,13 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
                             ),
                           );
                         },
-                        icon: Icon(Icons.add_circle_outline, color: Colors.white),
+                        icon:
+                            Icon(Icons.add_circle_outline, color: Colors.white),
                         label: Text('CREATE NEW TEAM'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF009905),
-                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
                         ),
                       ),
                     ],
@@ -222,9 +227,8 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
                             // Selectable teams
                             ...List.generate(availableTeams.length, (idx) {
                               final team = availableTeams[idx];
-                              final originalIndex = teams.indexWhere(
-                                  (t) => t['id'].toString() ==
-                                      team['id'].toString());
+                              final originalIndex = teams.indexWhere((t) =>
+                                  t['id'].toString() == team['id'].toString());
                               return _buildTeamCard(
                                 team: team,
                                 title: 'Team ${originalIndex + 1}',
@@ -258,9 +262,9 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
                               const SizedBox(height: 8),
                               ...List.generate(joinedTeams.length, (idx) {
                                 final team = joinedTeams[idx];
-                                final originalIndex = teams.indexWhere(
-                                    (t) => t['id'].toString() ==
-                                        team['id'].toString());
+                                final originalIndex = teams.indexWhere((t) =>
+                                    t['id'].toString() ==
+                                    team['id'].toString());
                                 return _buildTeamCard(
                                   team: team,
                                   title: 'Team ${originalIndex + 1}',
@@ -283,13 +287,15 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
                           final selectedTeams = <String>[];
                           for (int i = 0; i < teamSelections.length; i++) {
                             if (teamSelections[i]) {
-                              selectedTeams.add(availableTeams[i]['id'].toString());
+                              selectedTeams
+                                  .add(availableTeams[i]['id'].toString());
                             }
                           }
-                          
+
                           // Add selected teams to contest-team mapping
                           if (widget.contestId != null) {
-                            final myContestsBloc = context.read<MyContestsBloc>();
+                            final myContestsBloc =
+                                context.read<MyContestsBloc>();
                             for (String teamId in selectedTeams) {
                               myContestsBloc.add(AddContestToMyContests(
                                 widget.contestId!,
@@ -298,14 +304,26 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
                               ));
                             }
                           }
-                          
-                          Navigator.pushNamed(
-                            context,
-                            M11_AppRoutes.c11_main_payment,
-                            arguments: {
-                              'contestId': widget.contestId ?? 'default',
-                              'contestData': widget.contestData ?? {},
-                            },
+
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   M11_AppRoutes.c11_main_payment,
+                          //   arguments: {
+                          //     'contestId': widget.contestId ?? 'default',
+                          //     'contestData': widget.contestData ?? {},
+                          //   },
+                          // );
+
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => ContestDetailsScreen(
+                                initialTabIndex: 0,
+                                openBottomSheet: true,
+                                contest: widget.contestData,
+                                contestId: widget.contestId,
+                              ),
+                            ),
+                            (route) => route.isFirst,
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -353,18 +371,16 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
     final team2 = players.length > 1 ? players[1]['team'] : 'Team 2';
     final team1Count = players.where((p) => p['team'] == team1).length;
     final team2Count = players.where((p) => p['team'] == team2).length;
-    Map<String, dynamic>? captain = players
-        .cast<Map<String, dynamic>? >()
-        .firstWhere(
-          (p) => p != null && p['id'] == team['captainId'],
-          orElse: () => null,
-        );
-    Map<String, dynamic>? viceCaptain = players
-        .cast<Map<String, dynamic>? >()
-        .firstWhere(
-          (p) => p != null && p['id'] == team['viceCaptainId'],
-          orElse: () => null,
-        );
+    Map<String, dynamic>? captain =
+        players.cast<Map<String, dynamic>?>().firstWhere(
+              (p) => p != null && p['id'] == team['captainId'],
+              orElse: () => null,
+            );
+    Map<String, dynamic>? viceCaptain =
+        players.cast<Map<String, dynamic>?>().firstWhere(
+              (p) => p != null && p['id'] == team['viceCaptainId'],
+              orElse: () => null,
+            );
     final wkCount = players.where((p) => p['role'] == 'WK').length;
     final batCount = players.where((p) => p['role'] == 'BAT').length;
     final arCount = players.where((p) => p['role'] == 'AR').length;

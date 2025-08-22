@@ -54,8 +54,10 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
   // Join contest method
   void _joinContest(dynamic contest) {
     // Add to MyContestsBloc to update the My Contests tab
-    final myContestsBloc = BlocProvider.of<MyContestsBloc>(context, listen: false);
-    final contestId = contest['id']?.toString() ?? DateTime.now().millisecondsSinceEpoch.toString();
+    final myContestsBloc =
+        BlocProvider.of<MyContestsBloc>(context, listen: false);
+    final contestId = contest['id']?.toString() ??
+        DateTime.now().millisecondsSinceEpoch.toString();
     myContestsBloc.add(AddContestToMyContests(contestId, contest));
     print('Added contest to MyContestsBloc: $contestId');
   }
@@ -64,14 +66,16 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
   Future<void> _handleJoinContestFlow(dynamic contest, String contestId) async {
     // Get current team state and augment with persisted teams to avoid first-launch race conditions
     final teamState = context.read<TeamBloc>().state;
-    List<Map<String, dynamic>> teams = List<Map<String, dynamic>>.from(teamState.teams);
+    List<Map<String, dynamic>> teams =
+        List<Map<String, dynamic>>.from(teamState.teams);
 
     try {
       final prefs = await SharedPreferences.getInstance();
       final teamsJson = prefs.getString('saved_teams');
       if ((teams.isEmpty) && teamsJson != null && teamsJson.isNotEmpty) {
         final List decoded = json.decode(teamsJson) as List;
-        teams = decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+        teams =
+            decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
       }
     } catch (_) {}
     if (teams.isEmpty) {
@@ -80,25 +84,31 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
         MaterialPageRoute(
           builder: (context) => M11_CreateTeamScreen(
             source: 'join_contest',
+            contest: contest,
+            contestId: contestId,
           ),
         ),
       );
       return;
     }
-    
+
     // Check wallet balance (simulated - you should get this from your wallet service)
     final walletBalance = 49.0; // This should come from your wallet service
-    final contestEntryFee = double.tryParse(contest['discounted_entry']?.toString() ?? contest['entry']?.toString() ?? '0') ?? 0.0;
-    
+    final contestEntryFee = double.tryParse(
+            contest['discounted_entry']?.toString() ??
+                contest['entry']?.toString() ??
+                '0') ??
+        0.0;
+
     // Debug information
     print('Join Contest Flow Debug:');
     print('Teams count: ${teams.length}');
     print('Wallet balance: $walletBalance');
     print('Contest entry fee: $contestEntryFee');
     print('Contest data: ${contest.toString()}');
-    
+
     // Flowchart Logic Implementation
-    
+
     // Condition 1: Check if team exists
     if (teams.isEmpty) {
       print('Flow: No teams exist - Going to Create Team Screen');
@@ -108,6 +118,8 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
         MaterialPageRoute(
           builder: (context) => M11_CreateTeamScreen(
             source: 'join_contest',
+            contest: contest,
+            contestId: contestId,
           ),
         ),
       );
@@ -163,7 +175,7 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
     final finalAmount = discountedEntry;
     final walletBalance = 49.0; // This should come from your wallet service
     final unutilisedAmount = walletBalance - finalAmount;
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -216,7 +228,7 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                 ],
               ),
             ),
-            
+
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
@@ -323,7 +335,7 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                 ),
               ),
             ),
-            
+
             // Terms and Conditions
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -348,7 +360,7 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                 ],
               ),
             ),
-            
+
             // Fixed Join Contest Button
             SafeArea(
               child: Padding(
@@ -359,14 +371,14 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                     onPressed: () {
                       Navigator.pop(context);
                       _joinContest(contest);
-                      
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Contest joined successfully!'),
                           backgroundColor: Colors.green,
                         ),
                       );
-                      
+
                       setState(() {});
                     },
                     style: ElevatedButton.styleFrom(
@@ -620,7 +632,8 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                       ),
                       onPressed: () {
                         // Implement join contest flow according to flowchart
-                        _handleJoinContestFlow(contest, contest['id']?.toString() ?? 'default');
+                        _handleJoinContestFlow(
+                            contest, contest['id']?.toString() ?? 'default');
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

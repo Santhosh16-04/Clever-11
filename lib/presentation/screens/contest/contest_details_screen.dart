@@ -41,23 +41,68 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
   TabController? _tabController;
   ScrollController _scrollController = ScrollController();
 
+  bool _hasLoadedDependencies = false;
+
   @override
   void initState() {
     super.initState();
     _loadData();
-    // Load teams and contests from local storage
-    Future.microtask(() {
+    // // Load teams and contests from local storage
+    // Future.microtask(() {
+    //   final teamBloc = BlocProvider.of<TeamBloc>(context, listen: false);
+    //   teamBloc.add(LoadTeams());
+
+    //   final myContestsBloc =
+    //       BlocProvider.of<MyContestsBloc>(context, listen: false);
+    //   myContestsBloc.add(LoadMyContests());
+    // });
+
+    _openBottomSheet();
+  }
+
+  void _onTabChanged() {
+    setState(() {});
+  }
+
+  void _openBottomSheet() {
+    if (widget.openBottomSheet) {
+      // Use WidgetsBinding to ensure context is available
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final walletBalance = 49.0; // Replace with actual wallet service call
+        final contestEntryFee =
+            double.tryParse(widget.contest['entry']?.toString() ?? '0') ?? 0.0;
+
+        if (walletBalance >= contestEntryFee) {
+          _showJoinContestConfirmation(widget.contest, widget.contestId!);
+        } else {
+          Navigator.pushNamed(
+            context,
+            M11_AppRoutes.c11_main_payment,
+            arguments: {
+              'contestId': widget.contestId,
+              'contestData': widget.contest,
+            },
+          );
+        }
+      });
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_hasLoadedDependencies) {
+      _hasLoadedDependencies = true;
+
+      // Load teams and contests from local storage
       final teamBloc = BlocProvider.of<TeamBloc>(context, listen: false);
       teamBloc.add(LoadTeams());
 
       final myContestsBloc =
           BlocProvider.of<MyContestsBloc>(context, listen: false);
       myContestsBloc.add(LoadMyContests());
-    });
-  }
-
-  void _onTabChanged() {
-    setState(() {});
+    }
   }
 
   @override
