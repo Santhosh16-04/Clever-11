@@ -420,6 +420,8 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
     final winnings = data!["winnings"];
     final leaderboard = data!["leaderboard"];
 
+    print("contestId === $contest");
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF003FB4),

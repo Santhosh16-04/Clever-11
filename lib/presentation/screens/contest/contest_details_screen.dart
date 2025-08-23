@@ -204,6 +204,7 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
       final Map<String, List<String>> mappings =
           myContestsState.contestTeamMappings;
       teamsUsedInContest = mappings[contestId] ?? [];
+      print('contestId: $contestId');
       print('Teams used in contest: $teamsUsedInContest');
     } else {
       print(
@@ -305,8 +306,10 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
       // Check if user has already joined this contest
       if (hasJoinedThisContest) {
         // User has already joined this contest - Go to Select Team Screen
+
         print(
             'Flow: Same contest, multiple teams - Going to Select Team Screen');
+
         Navigator.push(
           context,
           MaterialPageRoute(

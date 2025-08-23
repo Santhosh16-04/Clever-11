@@ -57,4 +57,4 @@ class TeamBloc extends Bloc<TeamEvent, TeamState> {
     final List<dynamic> decoded = jsonDecode(teamsJson);
     return decoded.map((e) => Map<String, dynamic>.from(e)).toList();
   }
-} 
+}
