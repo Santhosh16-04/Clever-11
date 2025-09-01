@@ -13,10 +13,12 @@ void main() {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => TeamBloc()..add(LoadTeams()), // <-- Load teams at startup
+          create: (_) =>
+              TeamBloc()..add(LoadTeams()), // <-- Load teams at startup
         ),
         BlocProvider(
-          create: (_) => MyContestsBloc()..add(LoadMyContests()), // <-- Load contests at startup
+          create: (_) => MyContestsBloc()
+            ..add(LoadMyContests()), // <-- Load contests at startup
         ),
       ],
       child: MyApp(),
@@ -29,8 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,   
-      
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

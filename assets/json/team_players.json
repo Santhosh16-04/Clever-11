@@ -1,7 +1,7 @@
 {
   "match": {
-    "team1": "ENG-W",
-    "team2": "IND-W",
+    "team1": "MI",
+    "team2": "CSK",
     "team1_logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVwqhn7xFDLjmwcAmgsMroHIUu2tI-HaFwVg&s",
     "team1_logo_size": "20",
     "team2_logo": "https://i.pinimg.com/736x/76/75/a2/7675a2ed169a45dd9dc1a02347e45e13.jpg",
@@ -16,39 +16,937 @@
     "avg_score": "145"
   },
   "roles": [
-    {"key": "WK", "label": "Wicket Keeper", "min": 1, "max": 8},
-    {"key": "BAT", "label": "Batsman", "min": 3, "max": 6},
-    {"key": "AR", "label": "All Rounder", "min": 1, "max": 4},
-    {"key": "BOWL", "label": "Bowler", "min": 3, "max": 6}
+    {
+      "key": "WK",
+      "label": "Wicket Keeper",
+      "min": 1,
+      "max": 8
+    },
+    {
+      "key": "BAT",
+      "label": "BAT",
+      "min": 3,
+      "max": 6
+    },
+    {
+      "key": "AR",
+      "label": "All Rounder",
+      "min": 1,
+      "max": 4
+    },
+    {
+      "key": "BOWL",
+      "label": "BOWL",
+      "min": 3,
+      "max": 6
+    }
   ],
   "players": [
-    {"id": 1, "name": "Richa Ghosh", "team": "IND-W", "role": "WK", "type": "WK", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQTFVlZ5vjR_mlBws3MSf24gRJr6Gu6s7G9Q&s", "points": 68, "status": "Played last match", "percentage": 90, "credits": 8.5, "captain_percent": 2.1, "tour_points": 1200, "announced": true, "recent_matches": [ { "points": 68, "match": "IND" }, { "points": 55, "match": "ENG" }, { "points": 40, "match": "AUS" }, { "points": 30, "match": "SA" } ] },
-    {"id": 2, "name": "T Beaumont", "team": "ENG-W", "role": "WK", "type": "WK", "image": "https://media.gettyimages.com/id/2218733284/photo/leicester-england-tammy-beaumont-of-england-during-the-2nd-womens-metro-bank-odi-between.jpg?s=612x612&w=gi&k=20&c=FkjiwmLLZeRlKy1ZtK7_UQeAIRBPDUw8qb_rklqoagc=", "points": 18, "status": "Played last match", "percentage": 26, "credits": 8, "captain_percent": 1.5, "tour_points": 900, "announced": true, "recent_matches": [ { "points": 18, "match": "ENG" }, { "points": 25, "match": "IND" }, { "points": 10, "match": "AUS" }, { "points": 5, "match": "SA" } ] },
-    {"id": 3, "name": "Amy Jones", "team": "ENG-W", "role": "WK", "type": "WK", "image": "https://static-files.cricket-australia.pulselive.com/headshots/440/409-camedia.png", "points": 5, "status": "Played last match", "percentage": 17, "credits": 7.5, "captain_percent": 0.9, "tour_points": 800, "announced": true, "recent_matches": [ { "points": 5, "match": "ENG" }, { "points": 12, "match": "IND" }, { "points": 8, "match": "AUS" }, { "points": 3, "match": "SA" } ] },
-    {"id": 4, "name": "Y Bhatia", "team": "IND-W", "role": "WK", "type": "WK", "image": "https://img1.hscicdn.com/image/upload/f_auto,t_ds_square_w_320,q_50/lsci/db/PICTURES/CMS/387300/387319.5.png", "points": 0, "status": "Ultimate Team (last match)", "percentage": 2, "credits": 8, "captain_percent": 0.5, "tour_points": 600, "announced": true, "recent_matches": [ { "points": 0, "match": "IND" }, { "points": 10, "match": "ENG" }, { "points": 5, "match": "AUS" }, { "points": 2, "match": "SA" } ] },
-
-    {"id": 5, "name": "Smriti Mandhana", "team": "IND-W", "role": "BAT", "type": "BAT", "image": "https://media.gettyimages.com/id/2175453523/photo/dubai-united-arab-emirates-smriti-mandhana-of-india-poses-for-a-portrait-with-her-icc-player.jpg?s=612x612&w=gi&k=20&c=p1k6ohB2e2eNxA1Kn8RjkY7DPcPXyh8aDzFSyUw2nRA=", "points": 75, "status": "Played last match", "percentage": 85, "credits": 10, "captain_percent": 3.2, "tour_points": 1500, "announced": true, "recent_matches": [ { "points": 75, "match": "IND" }, { "points": 60, "match": "ENG" }, { "points": 50, "match": "AUS" }, { "points": 40, "match": "SA" } ] },
-    {"id": 6, "name": "Shafali Verma", "team": "IND-W", "role": "BAT", "type": "BAT", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpmqefhSvB05SPLEtWV-ggnQFhC0GklQmmug&s", "points": 60, "status": "Played last match", "percentage": 70, "credits": 9, "captain_percent": 1.8, "tour_points": 1100, "announced": true, "recent_matches": [ { "points": 60, "match": "IND" }, { "points": 55, "match": "ENG" }, { "points": 45, "match": "AUS" }, { "points": 35, "match": "SA" } ] },
-    {"id": 7, "name": "Heather Knight", "team": "ENG-W", "role": "BAT", "type": "BAT", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd6Vh8TY_Q-WCx97lnGfJhYhjFKE5KVKfoWg&s", "points": 80, "status": "Played last match", "percentage": 88, "credits": 10, "captain_percent": 2.5, "tour_points": 1300, "announced": true, "recent_matches": [ { "points": 80, "match": "ENG" }, { "points": 70, "match": "IND" }, { "points": 60, "match": "AUS" }, { "points": 50, "match": "SA" } ] },
-    {"id": 8, "name": "Danni Wyatt", "team": "ENG-W", "role": "BAT", "type": "BAT", "image": "https://media.gettyimages.com/id/1463457113/photo/stellenbosch-south-africa-danni-wyatt-of-england-poses-for-a-portrait-prior-to-the-icc-womens.jpg?s=612x612&w=gi&k=20&c=pdfMifMMUS12qnl46soXdaKp-ZyVC5ScadCI603jk9Y=", "points": 55, "status": "Played last match", "percentage": 60, "credits": 8, "captain_percent": 1.2, "tour_points": 950, "announced": true, "recent_matches": [ { "points": 55, "match": "ENG" }, { "points": 45, "match": "IND" }, { "points": 35, "match": "AUS" }, { "points": 25, "match": "SA" } ] },
-
-    {"id": 9, "name": "Deepti Sharma", "team": "IND-W", "role": "AR", "type": "AR", "image": "https://media.gettyimages.com/id/1463457113/photo/stellenbosch-south-africa-danni-wyatt-of-england-poses-for-a-portrait-prior-to-the-icc-womens.jpg?s=612x612&w=gi&k=20&c=pdfMifMMUS12qnl46soXdaKp-ZyVC5ScadCI603jk9Y=", "points": 90, "status": "Played last match", "percentage": 95, "credits": 10, "captain_percent": 2.8, "tour_points": 1400, "announced": true, "recent_matches": [ { "points": 90, "match": "IND" }, { "points": 80, "match": "ENG" }, { "points": 70, "match": "AUS" }, { "points": 60, "match": "SA" } ] },
-    {"id": 10, "name": "Natalie Sciver", "team": "ENG-W", "role": "AR", "type": "AR", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQTFVlZ5vjR_mlBws3MSf24gRJr6Gu6s7G9Q&s", "points": 100, "status": "Played last match", "percentage": 98, "credits": 11, "captain_percent": 3.0, "tour_points": 1600, "announced": true, "recent_matches": [ { "points": 100, "match": "ENG" }, { "points": 90, "match": "IND" }, { "points": 80, "match": "AUS" }, { "points": 70, "match": "SA" } ] },
-    {"id": 11, "name": "Sneh Rana", "team": "IND-W", "role": "AR", "type": "AR", "image": "https://media.gettyimages.com/id/2175453523/photo/dubai-united-arab-emirates-smriti-mandhana-of-india-poses-for-a-portrait-with-her-icc-player.jpg?s=612x612&w=gi&k=20&c=p1k6ohB2e2eNxA1Kn8RjkY7DPcPXyh8aDzFSyUw2nRA=", "points": 65, "status": "Played last match", "percentage": 60, "credits": 8, "captain_percent": 1.5, "tour_points": 1000, "announced": true, "recent_matches": [ { "points": 65, "match": "IND" }, { "points": 55, "match": "ENG" }, { "points": 45, "match": "AUS" }, { "points": 35, "match": "SA" } ] },
-    {"id": 12, "name": "Alice Capsey", "team": "ENG-W", "role": "AR", "type": "AR", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd6Vh8TY_Q-WCx97lnGfJhYhjFKE5KVKfoWg&s", "points": 50, "status": "Played last match", "percentage": 55, "credits": 8, "captain_percent": 1.0, "tour_points": 850, "announced": true, "recent_matches": [ { "points": 50, "match": "ENG" }, { "points": 40, "match": "IND" }, { "points": 30, "match": "AUS" }, { "points": 20, "match": "SA" } ] },
-
-    {"id": 13, "name": "Renuka Singh", "team": "IND-W", "role": "BOWL", "type": "pacer", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQTFVlZ5vjR_mlBws3MSf24gRJr6Gu6s7G9Q&s", "points": 70, "status": "Played last match", "percentage": 80, "credits": 9, "captain_percent": 2.0, "tour_points": 1300, "announced": true, "recent_matches": [ { "points": 70, "match": "IND" }, { "points": 60, "match": "ENG" }, { "points": 50, "match": "AUS" }, { "points": 40, "match": "SA" } ] },
-    {"id": 14, "name": "Sophie Ecclestone", "team": "ENG-W", "role": "BOWL", "type": "spinner", "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQTFVlZ5vjR_mlBws3MSf24gRJr6Gu6s7G9Q&s", "points": 95, "status": "Played last match", "percentage": 92, "credits": 10, "captain_percent": 2.5, "tour_points": 1500, "announced": true, "recent_matches": [ { "points": 95, "match": "ENG" }, { "points": 85, "match": "IND" }, { "points": 75, "match": "AUS" }, { "points": 65, "match": "SA" } ] },
-    {"id": 15, "name": "Radha Yadav", "team": "IND-W", "role": "BOWL", "type": "spinner", "image": "https://media.gettyimages.com/id/2175453523/photo/dubai-united-arab-emirates-smriti-mandhana-of-india-poses-for-a-portrait-with-her-icc-player.jpg?s=612x612&w=gi&k=20&c=p1k6ohB2e2eNxA1Kn8RjkY7DPcPXyh8aDzFSyUw2nRA=", "points": 60, "status": "Played last match", "percentage": 65, "credits": 8, "captain_percent": 1.8, "tour_points": 1100, "announced": true, "recent_matches": [ { "points": 60, "match": "IND" }, { "points": 50, "match": "ENG" }, { "points": 40, "match": "AUS" }, { "points": 30, "match": "SA" } ] },
-    {"id": 16, "name": "Sarah Glenn", "team": "ENG-W", "role": "BOWL", "type": "pacer", "image": "https://media.gettyimages.com/id/2175453523/photo/dubai-united-arab-emirates-smriti-mandhana-of-india-poses-for-a-portrait-with-her-icc-player.jpg?s=612x612&w=gi&k=20&c=p1k6ohB2e2eNxA1Kn8RjkY7DPcPXyh8aDzFSyUw2nRA=", "points": 55, "status": "Played last match", "percentage": 60, "credits": 8, "captain_percent": 1.2, "tour_points": 900, "announced": false, "recent_matches": [ { "points": 55, "match": "ENG" }, { "points": 45, "match": "IND" }, { "points": 35, "match": "AUS" }, { "points": 25, "match": "SA" } ] },
-    {"id": 17, "name": "Fran Wilson", "team": "ENG-W", "role": "BAT", "type": "BAT", "image": "https://randomuser.me/api/portraits/women/17.jpg", "points": 20, "status": "Not played", "percentage": 5, "credits": 7.5, "captain_percent": 0.2, "tour_points": 300, "announced": false, "recent_matches": [ { "points": 20, "match": "ENG" }, { "points": 10, "match": "IND" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 18, "name": "Harleen Deol", "team": "IND-W", "role": "BAT", "type": "BAT", "image": "https://randomuser.me/api/portraits/women/18.jpg", "points": 15, "status": "Not played", "percentage": 3, "credits": 7, "captain_percent": 0.1, "tour_points": 250, "announced": false, "recent_matches": [ { "points": 15, "match": "IND" }, { "points": 5, "match": "ENG" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 19, "name": "Freya Davies", "team": "ENG-W", "role": "BOWL", "type": "pacer", "image": "https://randomuser.me/api/portraits/women/19.jpg", "points": 10, "status": "Not played", "percentage": 2, "credits": 7, "captain_percent": 0.1, "tour_points": 200, "announced": false, "recent_matches": [ { "points": 10, "match": "ENG" }, { "points": 0, "match": "IND" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 20, "name": "Radha Yadav", "team": "IND-W", "role": "BOWL", "type": "spinner", "image": "https://randomuser.me/api/portraits/women/20.jpg", "points": 8, "status": "Not played", "percentage": 1, "credits": 6.5, "captain_percent": 0.05, "tour_points": 150, "announced": false, "recent_matches": [ { "points": 8, "match": "IND" }, { "points": 0, "match": "ENG" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 21, "name": "Sushma Verma", "team": "IND-W", "role": "WK", "type": "WK", "image": "https://randomuser.me/api/portraits/women/21.jpg", "points": 5, "status": "Not played", "percentage": 1, "credits": 6, "captain_percent": 0.01, "tour_points": 100, "announced": false, "recent_matches": [ { "points": 5, "match": "IND" }, { "points": 0, "match": "ENG" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 22, "name": "Sophia Dunkley", "team": "ENG-W", "role": "AR", "type": "AR", "image": "https://randomuser.me/api/portraits/women/22.jpg", "points": 12, "status": "Not played", "percentage": 2, "credits": 7, "captain_percent": 0.1, "tour_points": 180, "announced": false, "recent_matches": [ { "points": 12, "match": "ENG" }, { "points": 0, "match": "IND" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 23, "name": "Jemimah Rodrigues", "team": "IND-W", "role": "BAT", "type": "BAT", "image": "https://randomuser.me/api/portraits/women/23.jpg", "points": 18, "status": "Not played", "percentage": 2, "credits": 7.5, "captain_percent": 0.1, "tour_points": 220, "announced": false, "recent_matches": [ { "points": 18, "match": "IND" }, { "points": 0, "match": "ENG" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 24, "name": "Poonam Yadav", "team": "IND-W", "role": "BOWL", "type": "spinner", "image": "https://randomuser.me/api/portraits/women/24.jpg", "points": 7, "status": "Not played", "percentage": 1, "credits": 6, "captain_percent": 0.01, "tour_points": 90, "announced": false, "recent_matches": [ { "points": 7, "match": "IND" }, { "points": 0, "match": "ENG" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] },
-    {"id": 25, "name": "Kate Cross", "team": "ENG-W", "role": "BOWL", "type": "pacer", "image": "https://randomuser.me/api/portraits/women/25.jpg", "points": 6, "status": "Not played", "percentage": 1, "credits": 6, "captain_percent": 0.01, "tour_points": 80, "announced": false, "recent_matches": [ { "points": 6, "match": "ENG" }, { "points": 0, "match": "IND" }, { "points": 0, "match": "AUS" }, { "points": 0, "match": "SA" } ] }
+    {
+      "id": 1,
+      "name": "MS Dhoni",
+      "team": "CSK",
+      "role": "WK",
+      "type": "WK",
+      "image": "https://cricketbetpro.com/wp-content/uploads/2024/03/MS-Dhoni.png",
+      "points": 72,
+      "status": "Played last match",
+      "percentage": 94,
+      "credits": 9.0,
+      "captain_percent": 4.3,
+      "tour_points": 1350,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 40,
+          "match": "MI"
+        },
+        {
+          "points": 15,
+          "match": "RCB"
+        },
+        {
+          "points": 55,
+          "match": "KKR"
+        },
+        {
+          "points": 35,
+          "match": "DC"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Ruturaj Gaikwad",
+      "team": "CSK",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/102.png",
+      "points": 85,
+      "status": "Played last match",
+      "percentage": 92,
+      "credits": 9.0,
+      "captain_percent": 3.5,
+      "tour_points": 1420,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 70,
+          "match": "MI"
+        },
+        {
+          "points": 20,
+          "match": "RCB"
+        },
+        {
+          "points": 55,
+          "match": "SRH"
+        },
+        {
+          "points": 60,
+          "match": "GT"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Devon Conway",
+      "team": "CSK",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUg3HzKflDfBl1W08np1k1Np5QNK34SpxeAQ&s",
+      "points": 60,
+      "status": "Played last match",
+      "percentage": 85,
+      "credits": 8.5,
+      "captain_percent": 2.7,
+      "tour_points": 1120,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 55,
+          "match": "MI"
+        },
+        {
+          "points": 40,
+          "match": "KKR"
+        },
+        {
+          "points": 20,
+          "match": "DC"
+        },
+        {
+          "points": 60,
+          "match": "PBKS"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Shivam Dube",
+      "team": "CSK",
+      "role": "AR",
+      "type": "BAT",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSM-hs3UEuSr5cwj_s5bEdAoxsqXZRpGK8cA&s",
+      "points": 95,
+      "status": "Played last match",
+      "percentage": 87,
+      "credits": 8.0,
+      "captain_percent": 5.1,
+      "tour_points": 1540,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 85,
+          "match": "MI"
+        },
+        {
+          "points": 30,
+          "match": "RCB"
+        },
+        {
+          "points": 45,
+          "match": "KKR"
+        },
+        {
+          "points": 80,
+          "match": "GT"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Ravindra Jadeja",
+      "team": "CSK",
+      "role": "AR",
+      "type": "ALL",
+      "image": "https://www.iplbetonline.in/wp-content/uploads/2023/04/46.png",
+      "points": 70,
+      "status": "Played last match",
+      "percentage": 91,
+      "credits": 9.5,
+      "captain_percent": 6.5,
+      "tour_points": 1600,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 75,
+          "match": "MI"
+        },
+        {
+          "points": 50,
+          "match": "RCB"
+        },
+        {
+          "points": 30,
+          "match": "SRH"
+        },
+        {
+          "points": 40,
+          "match": "DC"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Sam Curran",
+      "team": "CSK",
+      "role": "AR",
+      "type": "ALL",
+      "image": "https://d1k8sn41pix00a.cloudfront.net/media/players/photos/sam_curran.png",
+      "points": 82,
+      "status": "Played last match",
+      "percentage": 86,
+      "credits": 8.5,
+      "captain_percent": 4.9,
+      "tour_points": 1400,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 70,
+          "match": "RCB"
+        },
+        {
+          "points": 60,
+          "match": "MI"
+        },
+        {
+          "points": 40,
+          "match": "GT"
+        },
+        {
+          "points": 50,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Rachin Ravindra",
+      "team": "CSK",
+      "role": "AR",
+      "type": "ALL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/724.png",
+      "points": 62,
+      "status": "Played last match",
+      "percentage": 78,
+      "credits": 7.5,
+      "captain_percent": 1.9,
+      "tour_points": 980,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 35,
+          "match": "RCB"
+        },
+        {
+          "points": 55,
+          "match": "DC"
+        },
+        {
+          "points": 25,
+          "match": "PBKS"
+        },
+        {
+          "points": 40,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Deepak Chahar",
+      "team": "CSK",
+      "role": "BOWL",
+      "type": "BOWL",
+      "image": "https://www.iplbetonline.in/wp-content/uploads/2023/04/91-780x780.png",
+      "points": 50,
+      "status": "Played last match",
+      "percentage": 79,
+      "credits": 8.0,
+      "captain_percent": 1.4,
+      "tour_points": 1100,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 45,
+          "match": "MI"
+        },
+        {
+          "points": 25,
+          "match": "KKR"
+        },
+        {
+          "points": 35,
+          "match": "RCB"
+        },
+        {
+          "points": 20,
+          "match": "DC"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Matheesa Pathirana",
+      "team": "CSK",
+      "role": "BOWL",
+      "type": "BOWL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/1014.png",
+      "points": 65,
+      "status": "Played last match",
+      "percentage": 81,
+      "credits": 8.0,
+      "captain_percent": 2.3,
+      "tour_points": 1240,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 55,
+          "match": "GT"
+        },
+        {
+          "points": 45,
+          "match": "RCB"
+        },
+        {
+          "points": 35,
+          "match": "MI"
+        },
+        {
+          "points": 25,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Mukesh Choudhary",
+      "team": "CSK",
+      "role": "BOWL",
+      "type": "BOWL",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjMOt6LtbqNGHo39lqAe-LFj9PHi52jBaiOQ&s",
+      "points": 48,
+      "status": "Played last match",
+      "percentage": 73,
+      "credits": 7.0,
+      "captain_percent": 0.9,
+      "tour_points": 950,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 30,
+          "match": "RCB"
+        },
+        {
+          "points": 40,
+          "match": "MI"
+        },
+        {
+          "points": 25,
+          "match": "DC"
+        },
+        {
+          "points": 20,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Noor Ahmad",
+      "team": "CSK",
+      "role": "BOWL",
+      "type": "BOWL",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjMOt6LtbqNGHo39lqAe-LFj9PHi52jBaiOQ&s",
+      "points": 58,
+      "status": "Played last match",
+      "percentage": 75,
+      "credits": 7.5,
+      "captain_percent": 1.2,
+      "tour_points": 1020,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 45,
+          "match": "GT"
+        },
+        {
+          "points": 30,
+          "match": "RCB"
+        },
+        {
+          "points": 20,
+          "match": "PBKS"
+        },
+        {
+          "points": 35,
+          "match": "MI"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Rahul Tripathi",
+      "team": "CSK",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/188.png",
+      "points": 0,
+      "status": "Bench",
+      "percentage": 5,
+      "credits": 7.0,
+      "captain_percent": 0.2,
+      "tour_points": 0,
+      "announced": false,
+      "recent_matches": []
+    },
+    {
+      "id": 13,
+      "name": "Andre Siddarth",
+      "team": "CSK",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/188.png",
+      "points": 0,
+      "status": "Bench",
+      "percentage": 3,
+      "credits": 6.5,
+      "captain_percent": 0.1,
+      "tour_points": 0,
+      "announced": false,
+      "recent_matches": []
+    },
+    {
+      "id": 14,
+      "name": "Jamie Overton",
+      "team": "CSK",
+      "role": "AR",
+      "type": "ALL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/1216.png",
+      "points": 0,
+      "status": "Bench",
+      "percentage": 2,
+      "credits": 7.5,
+      "captain_percent": 0.1,
+      "tour_points": 0,
+      "announced": false,
+      "recent_matches": []
+    },
+    {
+      "id": 101,
+      "name": "Rohit Sharma",
+      "team": "MI",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR2rsr1Yi_PWmwJeT-vNTj6SkELDc0LsuhDg&s",
+      "points": 75,
+      "status": "Played last match",
+      "percentage": 95,
+      "credits": 9.5,
+      "captain_percent": 25.4,
+      "tour_points": 1850,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 75,
+          "match": "CSK"
+        },
+        {
+          "points": 60,
+          "match": "RCB"
+        },
+        {
+          "points": 42,
+          "match": "KKR"
+        },
+        {
+          "points": 28,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Ishan Kishan",
+      "team": "MI",
+      "role": "WK",
+      "type": "WK",
+      "image": "https://preview.redd.it/how-do-you-guys-see-about-ishan-kishans-time-with-the-v0-dpen14iahd3d1.jpeg?width=640&crop=smart&auto=webp&s=1c69e372d21745b1f803f653968d17da58a92b79",
+      "points": 55,
+      "status": "Played last match",
+      "percentage": 88,
+      "credits": 8.5,
+      "captain_percent": 12.2,
+      "tour_points": 1430,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 55,
+          "match": "CSK"
+        },
+        {
+          "points": 40,
+          "match": "RCB"
+        },
+        {
+          "points": 20,
+          "match": "DC"
+        },
+        {
+          "points": 10,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Suryakumar Yadav",
+      "team": "MI",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/174.png",
+      "points": 90,
+      "status": "Played last match",
+      "percentage": 93,
+      "credits": 9,
+      "captain_percent": 30.5,
+      "tour_points": 2000,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 90,
+          "match": "CSK"
+        },
+        {
+          "points": 65,
+          "match": "RCB"
+        },
+        {
+          "points": 35,
+          "match": "KKR"
+        },
+        {
+          "points": 20,
+          "match": "DC"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "name": "Tilak Varma",
+      "team": "MI",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/174.png",
+      "points": 68,
+      "status": "Played last match",
+      "percentage": 82,
+      "credits": 8,
+      "captain_percent": 5.8,
+      "tour_points": 1320,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 68,
+          "match": "CSK"
+        },
+        {
+          "points": 33,
+          "match": "RCB"
+        },
+        {
+          "points": 45,
+          "match": "DC"
+        },
+        {
+          "points": 20,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "Hardik Pandya",
+      "team": "MI",
+      "role": "AR",
+      "type": "ALL",
+      "image": "https://d13ir53smqqeyp.cloudfront.net/fc-player-images/5983.png",
+      "points": 72,
+      "status": "Played last match",
+      "percentage": 89,
+      "credits": 9,
+      "captain_percent": 14.8,
+      "tour_points": 1600,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 72,
+          "match": "CSK"
+        },
+        {
+          "points": 50,
+          "match": "RCB"
+        },
+        {
+          "points": 30,
+          "match": "KKR"
+        },
+        {
+          "points": 25,
+          "match": "DC"
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "Tim David",
+      "team": "MI",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://d13ir53smqqeyp.cloudfront.net/fc-player-images/5983.png",
+      "points": 40,
+      "status": "Played last match",
+      "percentage": 70,
+      "credits": 7.5,
+      "captain_percent": 1.8,
+      "tour_points": 1100,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 40,
+          "match": "CSK"
+        },
+        {
+          "points": 20,
+          "match": "RCB"
+        },
+        {
+          "points": 18,
+          "match": "KKR"
+        },
+        {
+          "points": 10,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "Cameron Green",
+      "team": "MI",
+      "role": "AR",
+      "type": "ALL",
+      "image": "https://www.mumbaiindians.com/static-assets/waf-images/d6/13/f0/16-9/1920-1080/4mqMHAcPT0.jpg",
+      "points": 65,
+      "status": "Played last match",
+      "percentage": 78,
+      "credits": 8.5,
+      "captain_percent": 4.4,
+      "tour_points": 1200,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 65,
+          "match": "CSK"
+        },
+        {
+          "points": 30,
+          "match": "RCB"
+        },
+        {
+          "points": 25,
+          "match": "KKR"
+        },
+        {
+          "points": 18,
+          "match": "DC"
+        }
+      ]
+    },
+    {
+      "id": 108,
+      "name": "Jasprit Bumrah",
+      "team": "MI",
+      "role": "BWL",
+      "type": "BOWL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/9.png",
+      "points": 85,
+      "status": "Played last match",
+      "percentage": 97,
+      "credits": 9.5,
+      "captain_percent": 20.2,
+      "tour_points": 1900,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 85,
+          "match": "CSK"
+        },
+        {
+          "points": 70,
+          "match": "RCB"
+        },
+        {
+          "points": 45,
+          "match": "DC"
+        },
+        {
+          "points": 30,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 109,
+      "name": "Trent Boult",
+      "team": "MI",
+      "role": "BWL",
+      "type": "BOWL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2025/9.png",
+      "points": 60,
+      "status": "Played last match",
+      "percentage": 85,
+      "credits": 8.5,
+      "captain_percent": 6.5,
+      "tour_points": 1400,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 60,
+          "match": "CSK"
+        },
+        {
+          "points": 35,
+          "match": "RCB"
+        },
+        {
+          "points": 25,
+          "match": "KKR"
+        },
+        {
+          "points": 20,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 110,
+      "name": "Piyush Chawla",
+      "team": "MI",
+      "role": "BWL",
+      "type": "BOWL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2024/149.png",
+      "points": 50,
+      "status": "Played last match",
+      "percentage": 76,
+      "credits": 7.5,
+      "captain_percent": 2.3,
+      "tour_points": 1250,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 50,
+          "match": "CSK"
+        },
+        {
+          "points": 30,
+          "match": "RCB"
+        },
+        {
+          "points": 25,
+          "match": "KKR"
+        },
+        {
+          "points": 15,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 111,
+      "name": "Jason Behrendorff",
+      "team": "MI",
+      "role": "BWL",
+      "type": "BOWL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2023/4.png",
+      "points": 45,
+      "status": "Played last match",
+      "percentage": 72,
+      "credits": 7.5,
+      "captain_percent": 1.2,
+      "tour_points": 1150,
+      "announced": true,
+      "recent_matches": [
+        {
+          "points": 45,
+          "match": "CSK"
+        },
+        {
+          "points": 28,
+          "match": "RCB"
+        },
+        {
+          "points": 22,
+          "match": "KKR"
+        },
+        {
+          "points": 15,
+          "match": "SRH"
+        }
+      ]
+    },
+    {
+      "id": 112,
+      "name": "Arjun Tendulkar",
+      "team": "MI",
+      "role": "BWL",
+      "type": "BOWL",
+      "image": "https://documents.iplt20.com/ipl/IPLHeadshot2023/4.png",
+      "points": 20,
+      "status": "Bench",
+      "percentage": 45,
+      "credits": 6,
+      "captain_percent": 0.5,
+      "tour_points": 600,
+      "announced": false,
+      "recent_matches": [
+        {
+          "points": 20,
+          "match": "CSK"
+        },
+        {
+          "points": 10,
+          "match": "RCB"
+        },
+        {
+          "points": 0,
+          "match": "DC"
+        },
+        {
+          "points": 15,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 113,
+      "name": "Nehal Wadhera",
+      "team": "MI",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://cricketaddictor.com/images/team/nehal-wadhera.png",
+      "points": 22,
+      "status": "Bench",
+      "percentage": 48,
+      "credits": 6.5,
+      "captain_percent": 0.7,
+      "tour_points": 700,
+      "announced": false,
+      "recent_matches": [
+        {
+          "points": 22,
+          "match": "CSK"
+        },
+        {
+          "points": 15,
+          "match": "RCB"
+        },
+        {
+          "points": 12,
+          "match": "DC"
+        },
+        {
+          "points": 8,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 114,
+      "name": "Dewald Brevis",
+      "team": "MI",
+      "role": "BAT",
+      "type": "BAT",
+      "image": "https://ipltable.in/wp-content/uploads/2024/02/image-2.png",
+      "points": 35,
+      "status": "Bench",
+      "percentage": 52,
+      "credits": 7,
+      "captain_percent": 1.1,
+      "tour_points": 900,
+      "announced": false,
+      "recent_matches": [
+        {
+          "points": 35,
+          "match": "CSK"
+        },
+        {
+          "points": 20,
+          "match": "RCB"
+        },
+        {
+          "points": 15,
+          "match": "DC"
+        },
+        {
+          "points": 10,
+          "match": "KKR"
+        }
+      ]
+    },
+    {
+      "id": 115,
+      "name": "Kumar Kartikeya",
+      "team": "MI",
+      "role": "BWL",
+      "type": "BOWL",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkPQBqJGJ_S3zny2yYUcgX669h0J6TTVhp7g&s  ",
+      "points": 28,
+      "status": "Bench",
+      "percentage": 40,
+      "credits": 6.5,
+      "captain_percent": 0.6,
+      "tour_points": 650,
+      "announced": false,
+      "recent_matches": [
+        {
+          "points": 28,
+          "match": "CSK"
+        },
+        {
+          "points": 12,
+          "match": "RCB"
+        },
+        {
+          "points": 15,
+          "match": "DC"
+        },
+        {
+          "points": 8,
+          "match": "SRH"
+        }
+      ]
+    }
   ]
-} 
+}

@@ -9,6 +9,7 @@ import 'package:clever_11/presentation/screens/contest/create_team_screen.dart';
 import 'package:clever_11/presentation/blocs/my_contests/my_contests_bloc.dart';
 import 'package:clever_11/presentation/blocs/my_contests/my_contests_events.dart';
 import 'package:clever_11/presentation/blocs/my_contests/my_contests_states.dart';
+import '../../../utils/connectivity_utils.dart';
 
 class SelectTeamScreen extends StatefulWidget {
   final int timeLeftMinutes;
@@ -92,6 +93,11 @@ class _SelectTeamScreenState extends State<SelectTeamScreen> {
           appBar: AppBar(
             leading: BackButton(
               color: Colors.white,
+              onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+                context,
+                () => Navigator.of(context).pop(),
+                customMessage: 'Internet required to go back',
+              ),
             ),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

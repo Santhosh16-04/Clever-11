@@ -4,6 +4,7 @@ import '../../../cubit/team/team_bloc.dart';
 import '../../../cubit/team/team_event.dart';
 import 'contest_details_screen.dart';
 import 'preview_team_screen.dart';
+import '../../../utils/connectivity_utils.dart';
 
 class SelectCaptainScreen extends StatefulWidget {
   final List<dynamic> players;
@@ -158,7 +159,11 @@ class _SelectCaptainScreenState extends State<SelectCaptainScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+            context,
+            () => Navigator.of(context).pop(),
+            customMessage: 'Internet required to go back',
+          ),
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,36 +383,40 @@ class _SelectCaptainScreenState extends State<SelectCaptainScreen> {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {
-                  // Calculate or use dummy values for preview
-                  double creditsLeft =
-                      0; // TODO: Replace with actual credits left if available
-                  String team1 = widget.players.isNotEmpty
-                      ? widget.players.first['team']
-                      : 'T1';
-                  String team2 = widget.players.length > 1
-                      ? widget.players[1]['team']
-                      : 'T2';
-                  int team1Count =
-                      widget.players.where((p) => p['team'] == team1).length;
-                  int team2Count =
-                      widget.players.where((p) => p['team'] == team2).length;
-                  List<Map<String, dynamic>> selectedPlayers = widget.players
-                      .map((p) => Map<String, dynamic>.from(p))
-                      .toList();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PreviewTeamScreen(
-                        selectedPlayers: selectedPlayers,
-                        creditsLeft: creditsLeft,
-                        team1: team1,
-                        team2: team2,
-                        team1Count: team1Count,
-                        team2Count: team2Count,
+                onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    // Calculate or use dummy values for preview
+                    double creditsLeft =
+                        0; // TODO: Replace with actual credits left if available
+                    String team1 = widget.players.isNotEmpty
+                        ? widget.players.first['team']
+                        : 'T1';
+                    String team2 = widget.players.length > 1
+                        ? widget.players[1]['team']
+                        : 'T2';
+                    int team1Count =
+                        widget.players.where((p) => p['team'] == team1).length;
+                    int team2Count =
+                        widget.players.where((p) => p['team'] == team2).length;
+                    List<Map<String, dynamic>> selectedPlayers = widget.players
+                        .map((p) => Map<String, dynamic>.from(p))
+                        .toList();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => PreviewTeamScreen(
+                          selectedPlayers: selectedPlayers,
+                          creditsLeft: creditsLeft,
+                          team1: team1,
+                          team2: team2,
+                          team1Count: team1Count,
+                          team2Count: team2Count,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                  customMessage: 'Internet required to preview team',
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey[200],
                   foregroundColor: Colors.black,
@@ -423,55 +432,72 @@ class _SelectCaptainScreenState extends State<SelectCaptainScreen> {
                 onPressed: (captainId != null &&
                         viceCaptainId != null &&
                         captainId != viceCaptainId)
-                    ? () {
-                        final teamData = {
-                          'id': widget.teamId ??
-                              DateTime.now().millisecondsSinceEpoch,
-                          'players': widget.players,
-                          'captainId': captainId,
-                          'viceCaptainId': viceCaptainId,
-                        };
-                        if (widget.teamId != null) {
-                          context
-                              .read<TeamBloc>()
-                              .add(EditTeam(widget.teamId!, teamData));
-                        } else {
-                          context.read<TeamBloc>().add(AddTeam(teamData));
-                        }
+                    ? () => ConnectivityUtils.checkConnectionAndExecute(
+                          context,
+                          () {
+                            final teamData = {
+                              'id': widget.teamId ??
+                                  DateTime.now().millisecondsSinceEpoch,
+                              'players': widget.players,
+                              'captainId': captainId,
+                              'viceCaptainId': viceCaptainId,
+                            };
+                            if (widget.teamId != null) {
+                              context
+                                  .read<TeamBloc>()
+                                  .add(EditTeam(widget.teamId!, teamData));
+                            } else {
+                              context.read<TeamBloc>().add(AddTeam(teamData));
+                            }
 
-                        // Handle navigation based on source
-                        if (widget.source == 'teams_tab') {
-                          // If came from teams tab, navigate to contest details with teams tab
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => ContestDetailsScreen(
-                                initialTabIndex: 0,
-                                contest: widget.contest,
-                                contestId: widget.contestId,
-                              ),
-                            ),
-                            (route) => route.isFirst,
-                          );
-                        } else if (widget.source == 'select_team') {
-                          // If came from select team screen, pop back to select team screen
-                          // Pop twice to go back to select team screen (create team -> select captain -> select team)
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                        } else {
-                          // Default behavior: navigate to contest details with teams tab
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                              builder: (context) => ContestDetailsScreen(
-                                initialTabIndex: 0,
-                                openBottomSheet: true,
-                                contest: widget.contest,
-                                contestId: widget.contestId,
-                              ),
-                            ),
-                            (route) => route.isFirst,
-                          );
-                        }
-                      }
+                            // Handle navigation based on source
+                            if (widget.source == 'add_team_to_contest') {
+                              // If came from ADD TEAM button in contest, return true to indicate success
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => ContestDetailsScreen(
+                                    initialTabIndex: 1,
+                                    openBottomSheet: true,
+                                    contest: widget.contest,
+                                    contestId: widget.contestId,
+                                  ),
+                                ),
+                                (route) => route.isFirst,
+                              );
+                            } else if (widget.source == 'teams_tab') {
+                              // If came from teams tab, navigate to contest details with teams tab
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => ContestDetailsScreen(
+                                    initialTabIndex: 0,
+                                    contest: widget.contest,
+                                    contestId: widget.contestId,
+                                  ),
+                                ),
+                                (route) => route.isFirst,
+                              );
+                            } else if (widget.source == 'select_team') {
+                              // If came from select team screen, pop back to select team screen
+                              // Pop twice to go back to select team screen (create team -> select captain -> select team)
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                            } else {
+                              // Default behavior: navigate to contest details with teams tab
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                  builder: (context) => ContestDetailsScreen(
+                                    initialTabIndex: 0,
+                                    openBottomSheet: true,
+                                    contest: widget.contest,
+                                    contestId: widget.contestId,
+                                  ),
+                                ),
+                                (route) => route.isFirst,
+                              );
+                            }
+                          },
+                          customMessage: 'Internet required to create team',
+                        )
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -580,16 +606,20 @@ class _SelectCaptainScreenState extends State<SelectCaptainScreen> {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (captainId == player['id']) {
-                        captainId = null;
-                      } else {
-                        captainId = player['id'];
-                        if (viceCaptainId == captainId) viceCaptainId = null;
-                      }
-                    });
-                  },
+                  onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                    context,
+                    () {
+                      setState(() {
+                        if (captainId == player['id']) {
+                          captainId = null;
+                        } else {
+                          captainId = player['id'];
+                          if (viceCaptainId == captainId) viceCaptainId = null;
+                        }
+                      });
+                    },
+                    customMessage: 'Internet required to select captain',
+                  ),
                   child: Container(
                     width: 32,
                     height: 32,
@@ -619,16 +649,20 @@ class _SelectCaptainScreenState extends State<SelectCaptainScreen> {
             Column(
               children: [
                 GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (viceCaptainId == player['id']) {
-                        viceCaptainId = null;
-                      } else {
-                        viceCaptainId = player['id'];
-                        if (captainId == viceCaptainId) captainId = null;
-                      }
-                    });
-                  },
+                  onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                    context,
+                    () {
+                      setState(() {
+                        if (viceCaptainId == player['id']) {
+                          viceCaptainId = null;
+                        } else {
+                          viceCaptainId = player['id'];
+                          if (captainId == viceCaptainId) captainId = null;
+                        }
+                      });
+                    },
+                    customMessage: 'Internet required to select vice captain',
+                  ),
                   child: Container(
                     width: 32,
                     height: 32,

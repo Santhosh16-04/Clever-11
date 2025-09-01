@@ -29,6 +29,7 @@
       "tag": "DISCOUNT",
       "contests": [
         {
+          "id": "contest_001",
           "verified": true,
           "guaranteed": true,
           "plus": true,
@@ -43,6 +44,7 @@
           "max_pool": "₹30 Lakhs"
         },
         {
+          "id": "contest_002",
           "verified": true,
           "guaranteed": true,
           "prize": "₹7 Lakhs",
@@ -56,6 +58,7 @@
           "max_pool": "₹10 Lakhs"
         },
         {
+          "id": "contest_003",
           "verified": true,
           "guaranteed": true,
           "prize": "₹15 Lakhs",
@@ -74,6 +77,7 @@
       "title": "Only For Beginners",
       "contests": [
         {
+          "id": "contest_004",
           "flexible_prize": true,
           "prize": "₹100",
           "entry": 10,
@@ -84,6 +88,7 @@
           "max_entries": 1
         },
         {
+          "id": "contest_005",
           "flexible_prize": true,
           "prize": "₹200",
           "entry": 20,
@@ -94,6 +99,7 @@
           "max_entries": 1
         },
         {
+          "id": "contest_006",
           "flexible_prize": true,
           "prize": "₹500",
           "entry": 50,
@@ -104,6 +110,7 @@
           "max_entries": 1
         },
         {
+          "id": "contest_007",
           "flexible_prize": true,
           "prize": "₹1000",
           "entry": 100,
@@ -114,6 +121,7 @@
           "max_entries": 1
         },
         {
+          "id": "contest_008",
           "flexible_prize": true,
           "prize": "₹2000",
           "entry": 200,
@@ -130,6 +138,7 @@
       "view_all": true,
       "contests": [
         {
+          "id": "contest_009",
           "flexible_prize": true,
           "prize": "₹1.50 Lakhs",
           "entry": 25000,
@@ -141,6 +150,7 @@
           "max_pool": ""
         },
         {
+          "id": "contest_010",
           "flexible_prize": true,
           "prize": "₹2.50 Lakhs",
           "entry": 50000,
@@ -152,6 +162,7 @@
           "max_pool": "₹3 Lakhs"
         },
         {
+          "id": "contest_011",
           "flexible_prize": true,
           "prize": "₹5.00 Lakhs",
           "entry": 100000,
@@ -163,6 +174,7 @@
           "max_pool": "₹6 Lakhs"
         },
         {
+          "id": "contest_012",
           "flexible_prize": true,
           "prize": "₹10.00 Lakhs",
           "entry": 200000,
@@ -174,6 +186,7 @@
           "max_pool": "₹12 Lakhs"
         },
         {
+          "id": "contest_013",
           "flexible_prize": true,
           "prize": "₹25.00 Lakhs",
           "entry": 500000,

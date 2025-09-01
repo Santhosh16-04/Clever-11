@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import '../../widgets/network_image_loader.dart';
+import '../../../utils/connectivity_utils.dart';
 
 class BackUpScreen extends StatefulWidget {
   const BackUpScreen({super.key});
@@ -82,12 +84,16 @@ class _BackUpScreenState extends State<BackUpScreen> {
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(25),
-                onTap: () {
-                  // Preview action for backups page – currently no preview screen, so just a snackbar
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Preview coming soon')),
-                  );
-                },
+                                 onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                   context,
+                   () {
+                     // Preview action for backups page – currently no preview screen, so just a snackbar
+                     ScaffoldMessenger.of(context).showSnackBar(
+                       const SnackBar(content: Text('Preview coming soon')),
+                     );
+                   },
+                   customMessage: 'Internet required to preview backups',
+                 ),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -117,12 +123,16 @@ class _BackUpScreenState extends State<BackUpScreen> {
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(25),
-                onTap: () {
-                  // Save backups; you can wire this to your actual save action
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Backups saved')),
-                  );
-                },
+                                 onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                   context,
+                   () {
+                     // Save backups; you can wire this to your actual save action
+                     ScaffoldMessenger.of(context).showSnackBar(
+                       const SnackBar(content: Text('Backups saved')),
+                     );
+                   },
+                   customMessage: 'Internet required to save backups',
+                 ),
                 child: const Center(
                   child: Text(
                     'SAVE',
@@ -218,10 +228,14 @@ class _BackUpScreenState extends State<BackUpScreen> {
           statusBarIconBrightness: Brightness.light,
           statusBarBrightness: Brightness.dark,
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+                 leading: IconButton(
+           icon: const Icon(Icons.close, color: Colors.white),
+           onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+             context,
+             () => Navigator.pop(context),
+             customMessage: 'Internet required to close backup screen',
+           ),
+         ),
         titleSpacing: 0,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,16 +385,20 @@ class _BackUpScreenState extends State<BackUpScreen> {
                   selected: isSel,
                   selectedColor: Colors.black,
                   backgroundColor: const Color(0xFFF2F3F7),
-                  onSelected: (_) {
-                    setState(() {
-                      if (_sortBy == f['key']) {
-                        _sortAsc = !_sortAsc;
-                      } else {
-                        _sortBy = f['key']!;
-                        _sortAsc = false;
-                      }
-                    });
-                  },
+                                     onSelected: (_) => ConnectivityUtils.checkConnectionAndExecute(
+                     context,
+                     () {
+                       setState(() {
+                         if (_sortBy == f['key']) {
+                           _sortAsc = !_sortAsc;
+                         } else {
+                           _sortBy = f['key']!;
+                           _sortAsc = false;
+                         }
+                       });
+                     },
+                     customMessage: 'Internet required to change filter',
+                   ),
                   showCheckmark: false,
                 ),
               );
@@ -410,8 +428,12 @@ class _BackUpScreenState extends State<BackUpScreen> {
     final Color cardBg = const Color(0xFFFFF6E5); // light cream
     final Color borderColor = isActive ? const Color(0xFFDFB980) : const Color(0xFFEAE1D4);
 
-    return GestureDetector(
-      onTap: () => setState(() => _activeSlotIndex = index),
+         return GestureDetector(
+       onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+         context,
+         () => setState(() => _activeSlotIndex = index),
+         customMessage: 'Internet required to select backup slot',
+       ),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 6),
         height: 120,
@@ -444,12 +466,16 @@ class _BackUpScreenState extends State<BackUpScreen> {
                 top: 6,
                 right: 6,
                 child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _backupPlayerIds[index] = null;
-                      _activeSlotIndex = index;
-                    });
-                  },
+                                     onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                     context,
+                     () {
+                       setState(() {
+                         _backupPlayerIds[index] = null;
+                         _activeSlotIndex = index;
+                       });
+                     },
+                     customMessage: 'Internet required to remove backup player',
+                   ),
                   child: CircleAvatar(
                     radius: 10,
                     backgroundColor: const Color(0xFFFFE1E1),
@@ -466,9 +492,38 @@ class _BackUpScreenState extends State<BackUpScreen> {
                 children: [
                   CircleAvatar(
                     radius: 22,
-                    backgroundImage: assigned != null ? AssetImage(assigned['image']) : null,
                     backgroundColor: Colors.grey[300],
-                    child: assigned == null ? const Icon(Icons.person, color: Colors.white70) : null,
+                    child: assigned != null 
+                      ? ClipOval(
+                          child: NetworkImageWithLoader(
+                            imageUrl: assigned['image'] ?? '',
+                            width: 44,
+                            height: 44,
+                            fit: BoxFit.cover,
+                            backgroundColor: Colors.grey[300],
+                            placeholder: Container(
+                              width: 44,
+                              height: 44,
+                              color: Colors.grey[300],
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white70,
+                                size: 22,
+                              ),
+                            ),
+                            errorWidget: Container(
+                              width: 44,
+                              height: 44,
+                              color: Colors.grey[300],
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white70,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Icon(Icons.person, color: Colors.white70),
                   ),
                   const SizedBox(height: 6),
                   Padding(
@@ -523,7 +578,39 @@ class _BackUpScreenState extends State<BackUpScreen> {
         children: [
           Column(
             children: [
-              CircleAvatar(backgroundImage: AssetImage(p['image']), radius: 18),
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.grey[300],
+                child: ClipOval(
+                  child: NetworkImageWithLoader(
+                    imageUrl: p['image'] ?? '',
+                    width: 36,
+                    height: 36,
+                    fit: BoxFit.cover,
+                    backgroundColor: Colors.grey[300],
+                    placeholder: Container(
+                      width: 36,
+                      height: 36,
+                      color: Colors.grey[300],
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white70,
+                        size: 18,
+                      ),
+                    ),
+                    errorWidget: Container(
+                      width: 36,
+                      height: 36,
+                      color: Colors.grey[300],
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white70,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -572,7 +659,11 @@ class _BackUpScreenState extends State<BackUpScreen> {
           ),
           const SizedBox(width: 10),
           GestureDetector(
-            onTap: disabled ? null : () => _toggleSelect(p),
+            onTap: disabled ? null : () => ConnectivityUtils.checkConnectionAndExecute(
+             context,
+             () => _toggleSelect(p),
+             customMessage: 'Internet required to select player',
+           ),
             child: CircleAvatar(
               radius: 14,
               backgroundColor: disabled ? Colors.grey[200] : (selected ? const Color(0xFFFFE9E9) : const Color(0xFFE8F0FE)),

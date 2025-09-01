@@ -8,10 +8,18 @@ import 'package:clever_11/cubit/team/team_bloc.dart';
 import 'package:clever_11/routes/m11_routes.dart';
 import 'package:clever_11/presentation/blocs/my_contests/my_contests_bloc.dart';
 import 'package:clever_11/presentation/blocs/my_contests/my_contests_events.dart';
+import 'package:clever_11/presentation/blocs/my_contests/my_contests_states.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ContestFullViewScreen extends StatefulWidget {
-  const ContestFullViewScreen({Key? key}) : super(key: key);
+  final String? contestId;
+  final dynamic contestData;
+  
+  const ContestFullViewScreen({
+    Key? key, 
+    this.contestId,
+    this.contestData,
+  }) : super(key: key);
 
   @override
   State<ContestFullViewScreen> createState() => _ContestFullViewScreenState();
@@ -32,16 +40,39 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
   }
 
   Future<void> _loadData() async {
-    final String jsonString =
-        await rootBundle.loadString('assets/json/contest_full_view.json');
-    final Map<String, dynamic> jsonData = json.decode(jsonString);
-    setState(() {
-      data = jsonData;
-      isLoading = false;
-      _tabController = TabController(length: data!["tabs"].length, vsync: this);
-      _subTabController =
-          TabController(length: data!["sub_tabs"].length, vsync: this);
-    });
+    // If contest data is passed from contest details screen, use it
+    if (widget.contestData != null) {
+      final String jsonString =
+          await rootBundle.loadString('assets/json/contest_full_view.json');
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      
+      // Merge the passed contest data with the template data
+      jsonData['contest'] = {
+        ...jsonData['contest'],
+        ...widget.contestData,
+        'id': widget.contestId ?? widget.contestData['id'] ?? 'contest_001',
+      };
+      
+      setState(() {
+        data = jsonData;
+        isLoading = false;
+        _tabController = TabController(length: data!["tabs"].length, vsync: this);
+        _subTabController =
+            TabController(length: data!["sub_tabs"].length, vsync: this);
+      });
+    } else {
+      // Load default data from JSON
+      final String jsonString =
+          await rootBundle.loadString('assets/json/contest_full_view.json');
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      setState(() {
+        data = jsonData;
+        isLoading = false;
+        _tabController = TabController(length: data!["tabs"].length, vsync: this);
+        _subTabController =
+            TabController(length: data!["sub_tabs"].length, vsync: this);
+      });
+    }
   }
 
   @override
@@ -53,13 +84,9 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
 
   // Join contest method
   void _joinContest(dynamic contest) {
-    // Add to MyContestsBloc to update the My Contests tab
-    final myContestsBloc =
-        BlocProvider.of<MyContestsBloc>(context, listen: false);
-    final contestId = contest['id']?.toString() ??
-        DateTime.now().millisecondsSinceEpoch.toString();
-    myContestsBloc.add(AddContestToMyContests(contestId, contest));
-    print('Added contest to MyContestsBloc: $contestId');
+    // This method is now only called after the contest has already been added to MyContestsBloc
+    // with proper team mapping in the confirmation flow
+    print('Contest joined successfully from full view screen');
   }
 
   // Add join contest flow method according to flowchart
@@ -78,7 +105,9 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
             decoded.map((e) => Map<String, dynamic>.from(e as Map)).toList();
       }
     } catch (_) {}
+
     if (teams.isEmpty) {
+      // Definitively no team on device → go to create team
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -90,6 +119,33 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
         ),
       );
       return;
+    }
+
+    // Check if user has already joined this contest
+    final myContestsBloc = context.read<MyContestsBloc>();
+    final myContestsState = myContestsBloc.state;
+
+    bool hasJoinedThisContest = false;
+    List<String> teamsUsedInContest = [];
+
+    if (myContestsState is MyContestsLoaded) {
+      print('MyContestsState is MyContestsLoaded');
+      print('Contests count: ${myContestsState.contests.length}');
+
+      // Check if this contest exists in joined contests
+      hasJoinedThisContest = myContestsState.contests.any((c) =>
+          c['id']?.toString() == contestId ||
+          c['prize'] == contest['prize'] && c['entry'] == contest['entry']);
+
+      // Get teams already used in this contest - with safety check
+      final Map<String, List<String>> mappings =
+          myContestsState.contestTeamMappings;
+      teamsUsedInContest = mappings[contestId] ?? [];
+      print('contestId: $contestId');
+      print('Teams used in contest: $teamsUsedInContest');
+    } else {
+      print(
+          'MyContestsState is not MyContestsLoaded: ${myContestsState.runtimeType}');
     }
 
     // Check wallet balance (simulated - you should get this from your wallet service)
@@ -106,6 +162,8 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
     print('Wallet balance: $walletBalance');
     print('Contest entry fee: $contestEntryFee');
     print('Contest data: ${contest.toString()}');
+    print('Has joined this contest: $hasJoinedThisContest');
+    print('Teams used in contest: $teamsUsedInContest');
 
     // Flowchart Logic Implementation
 
@@ -124,38 +182,102 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
         ),
       );
     } else if (teams.length == 1) {
-      print('Flow: Single team exists - Checking wallet balance');
-      // Single team exists - Check wallet balance
-      if (walletBalance >= contestEntryFee) {
-        print('Flow: Sufficient balance - Opening confirmation bottom sheet');
-        // Wallet has sufficient balance - Show confirmation bottom sheet
-        _showJoinContestConfirmation(contest, contestId);
+      print(
+          'Flow: Single team exists - Checking if already used in this contest');
+
+      final singleTeamId = teams.first['id'].toString();
+
+      // Check if user has already joined this contest
+      if (hasJoinedThisContest) {
+        // User has already joined this contest
+        if (teamsUsedInContest.contains(singleTeamId)) {
+          print('Flow: Same contest, same team - Going to Create Team Screen');
+          // Same contest, same team - Go to Create Team Screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => M11_CreateTeamScreen(
+                source: 'join_contest',
+                contest: contest,
+                contestId: contestId,
+              ),
+            ),
+          );
+        } else {
+          print(
+              'Flow: Same contest, different team - Going to Create Team Screen');
+          // Same contest, different team - Go to Create Team Screen (since only one team)
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => M11_CreateTeamScreen(
+                source: 'join_contest',
+                contest: contest,
+                contestId: contestId,
+              ),
+            ),
+          );
+        }
       } else {
-        print('Flow: Insufficient balance - Going to Payment Screen');
-        // Insufficient balance - Go to Payment Screen
-        Navigator.pushNamed(
-          context,
-          M11_AppRoutes.c11_main_payment,
-          arguments: {
-            'contestId': contestId,
-            'contestData': contest,
-          },
-        );
+        // User hasn't joined this contest before - Show normal flow
+        print('Flow: Single team exists - Checking wallet balance');
+        // Single team exists - Check wallet balance
+        if (walletBalance >= contestEntryFee) {
+          print('Flow: Sufficient balance - Opening confirmation bottom sheet');
+          // Wallet has sufficient balance - Show confirmation bottom sheet
+          _showJoinContestConfirmation(contest, contestId);
+        } else {
+          print('Flow: Insufficient balance - Going to Payment Screen');
+          // Insufficient balance - Go to Payment Screen
+          Navigator.pushNamed(
+            context,
+            M11_AppRoutes.c11_main_payment,
+            arguments: {
+              'contestId': contestId,
+              'contestData': contest,
+            },
+          );
+        }
       }
     } else {
-      print('Flow: Multiple teams exist - Going to Select Team Screen');
-      // Multiple teams exist - Go to Select Team Screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SelectTeamScreen(
-            timeLeftMinutes: 109,
-            maxTeams: 20,
-            contestData: contest,
-            contestId: contestId,
+      print(
+          'Flow: Multiple teams exist - Checking if already joined this contest');
+
+      // Check if user has already joined this contest
+      if (hasJoinedThisContest) {
+        // User has already joined this contest - Go to Select Team Screen
+
+        print(
+            'Flow: Same contest, multiple teams - Going to Select Team Screen');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SelectTeamScreen(
+              timeLeftMinutes: 109,
+              maxTeams: 20,
+              contestData: contest,
+              contestId: contestId,
+              teamsUsedInContest: teamsUsedInContest, // Pass teams already used
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        // User hasn't joined this contest before - Show normal flow
+        print('Flow: Multiple teams exist - Going to Select Team Screen');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SelectTeamScreen(
+              timeLeftMinutes: 109,
+              maxTeams: 20,
+              contestData: contest,
+              contestId: contestId,
+              teamsUsedInContest: teamsUsedInContest, // Pass teams already used
+            ),
+          ),
+        );
+      }
     }
   }
 
@@ -370,6 +492,35 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
+
+                      // Get teams and add to contest-team mapping
+                      final teamState = context.read<TeamBloc>().state;
+                      if (teamState.teams.isNotEmpty) {
+                        final myContestsBloc = context.read<MyContestsBloc>();
+                        // Use stable contest id to avoid duplicates in My Contests
+                        final stableId = widget.contestId ?? contest['id']?.toString() ?? 'contest_001';
+                        
+                        // If multiple teams exist, add all teams to the contest
+                        if (teamState.teams.length > 1) {
+                          for (var team in teamState.teams) {
+                            final teamId = team['id'].toString();
+                            myContestsBloc.add(AddContestToMyContests(
+                              stableId,
+                              contest,
+                              teamId: teamId,
+                            ));
+                          }
+                        } else {
+                          // Single team
+                          final teamId = teamState.teams.first['id'].toString();
+                          myContestsBloc.add(AddContestToMyContests(
+                            stableId,
+                            contest,
+                            teamId: teamId,
+                          ));
+                        }
+                      }
+
                       _joinContest(contest);
 
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -634,8 +785,8 @@ class _ContestFullViewScreenState extends State<ContestFullViewScreen>
                       ),
                       onPressed: () {
                         // Implement join contest flow according to flowchart
-                        _handleJoinContestFlow(
-                            contest, contest['id']?.toString() ?? 'default');
+                        final contestId = widget.contestId ?? contest['id']?.toString() ?? 'default';
+                        _handleJoinContestFlow(contest, contestId);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

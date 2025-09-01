@@ -552,19 +552,33 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
                     onPressed: () {
                       Navigator.pop(context);
 
-                      // Get the single team and add it to contest-team mapping
+                      // Get teams and add to contest-team mapping
                       final teamState = context.read<TeamBloc>().state;
                       if (teamState.teams.isNotEmpty) {
-                        final teamId = teamState.teams.first['id'].toString();
                         final myContestsBloc = context.read<MyContestsBloc>();
                         // Use stable contest id to avoid duplicates in My Contests
                         final stableId = _buildStableContestId(contest,
                             fallbackId: contestId);
-                        myContestsBloc.add(AddContestToMyContests(
-                          stableId,
-                          contest,
-                          teamId: teamId,
-                        ));
+                        
+                        // If multiple teams exist, add all teams to the contest
+                        if (teamState.teams.length > 1) {
+                          for (var team in teamState.teams) {
+                            final teamId = team['id'].toString();
+                            myContestsBloc.add(AddContestToMyContests(
+                              stableId,
+                              contest,
+                              teamId: teamId,
+                            ));
+                          }
+                        } else {
+                          // Single team
+                          final teamId = teamState.teams.first['id'].toString();
+                          myContestsBloc.add(AddContestToMyContests(
+                            stableId,
+                            contest,
+                            teamId: teamId,
+                          ));
+                        }
                       }
 
                       _joinContest(contest);
@@ -617,8 +631,11 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
   // Build a stable contestId from key fields to avoid duplicates in My Contests
   String _buildStableContestId(dynamic contest, {String? fallbackId}) {
     try {
+      // First priority: use contest ID from JSON
       final id = contest['id']?.toString();
       if (id != null && id.isNotEmpty) return id;
+
+      // Fallback: build from contest properties
       final prize = contest['prize']?.toString() ?? '';
       final entry = contest['entry']?.toString() ??
           contest['discounted_entry']?.toString() ??
@@ -907,7 +924,11 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              ContestFullViewScreen(),
+                                              ContestFullViewScreen(
+                                            contestId:
+                                                contest['id'] ?? 'contest_001',
+                                            contestData: contest,
+                                          ),
                                         ),
                                       );
                                     },
@@ -1024,11 +1045,12 @@ class _ContestDetailsScreenState extends State<ContestDetailsScreen>
                                                                 // Go to team selection screen
                                                                 InkWell(
                                                                   onTap: () {
-                                                                    // Create a unique contest ID based on contest properties
+                                                                    // Use contest ID from JSON
                                                                     print(
                                                                         "CLICKED FOR JOIN CONTEST");
                                                                     final contestId =
-                                                                        '${contest['prize'] ?? 'contest'}_${contest['entry'] ?? contest['discounted_entry'] ?? '0'}_${contest['spots_left'] ?? '0'}';
+                                                                        contest['id'] ??
+                                                                            'contest_001';
 
                                                                     // Get contest entry amount
                                                                     final entryAmount = contest[
@@ -2335,8 +2357,8 @@ class _ContestCardState extends State<ContestCard> {
                           },
                           child: Row(
                             children: [
-                              const Text(
-                                "Joined with 1 team",
+                              Text(
+                                "Joined with ${teamState.teams.length} team${teamState.teams.length > 1 ? 's' : ''}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 14),
                               ),
@@ -2356,13 +2378,27 @@ class _ContestCardState extends State<ContestCard> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
+                              // Show all teams
+                              ...teamState.teams.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final team = entry.value;
+                                final players = List<Map<String, dynamic>>.from(team['players'] ?? []);
+                                final captain = players.cast<Map<String, dynamic>?>().firstWhere(
+                                  (p) => p != null && p['id'] == team['captainId'],
+                                  orElse: () => null,
+                                );
+                                final viceCaptain = players.cast<Map<String, dynamic>?>().firstWhere(
+                                  (p) => p != null && p['id'] == team['viceCaptainId'],
+                                  orElse: () => null,
+                                );
+                                
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8),
-                                    border:
-                                        Border.all(color: Colors.grey[300]!),
+                                    border: Border.all(color: Colors.grey[300]!),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.1),
@@ -2373,51 +2409,43 @@ class _ContestCardState extends State<ContestCard> {
                                     ],
                                   ),
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      // Card
+                                      // Team Card
                                       Container(
                                         padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: Colors.grey[300]!),
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(color: Colors.grey[300]!),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black
-                                                  .withOpacity(0.05),
+                                              color: Colors.black.withOpacity(0.05),
                                               blurRadius: 6,
                                               offset: const Offset(0, 2),
                                             ),
                                           ],
                                         ),
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            // T1 and Icons
+                                            // Team Label and Icons
                                             Row(
                                               children: [
                                                 Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 4),
+                                                  padding: const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 4,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                     color: Colors.yellow[100],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            6),
+                                                    borderRadius: BorderRadius.circular(6),
                                                   ),
-                                                  child: const Text(
-                                                    'T1',
-                                                    style: TextStyle(
+                                                  child: Text(
+                                                    'T${index + 1}',
+                                                    style: const TextStyle(
                                                       fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                       color: Colors.black87,
                                                     ),
                                                   ),
@@ -2427,24 +2455,18 @@ class _ContestCardState extends State<ContestCard> {
                                                   onPressed: () {
                                                     // TODO: Edit team functionality
                                                   },
-                                                  icon: const Icon(
-                                                      Icons.edit_outlined,
-                                                      size: 18),
+                                                  icon: const Icon(Icons.edit_outlined, size: 18),
                                                   padding: EdgeInsets.zero,
-                                                  constraints:
-                                                      const BoxConstraints(),
+                                                  constraints: const BoxConstraints(),
                                                 ),
                                                 const SizedBox(width: 8),
                                                 IconButton(
                                                   onPressed: () {
                                                     // TODO: Swap team functionality
                                                   },
-                                                  icon: const Icon(
-                                                      Icons.swap_horiz,
-                                                      size: 18),
+                                                  icon: const Icon(Icons.swap_horiz, size: 18),
                                                   padding: EdgeInsets.zero,
-                                                  constraints:
-                                                      const BoxConstraints(),
+                                                  constraints: const BoxConstraints(),
                                                 ),
                                               ],
                                             ),
@@ -2458,10 +2480,8 @@ class _ContestCardState extends State<ContestCard> {
                                                   child: _buildPlayerCard(
                                                     captain,
                                                     'C',
-                                                    captain?['name'] ??
-                                                        'J Root',
-                                                    captain?['image'] ??
-                                                        'https://via.placeholder.com/50',
+                                                    captain?['name'] ?? 'J Root',
+                                                    captain?['image'] ?? 'https://via.placeholder.com/50',
                                                   ),
                                                 ),
                                                 const SizedBox(width: 16),
@@ -2469,10 +2489,8 @@ class _ContestCardState extends State<ContestCard> {
                                                   child: _buildPlayerCard(
                                                     viceCaptain,
                                                     'VC',
-                                                    viceCaptain?['name'] ??
-                                                        'L Rahul',
-                                                    viceCaptain?['image'] ??
-                                                        'https://via.placeholder.com/50',
+                                                    viceCaptain?['name'] ?? 'L Rahul',
+                                                    viceCaptain?['image'] ?? 'https://via.placeholder.com/50',
                                                   ),
                                                 ),
                                               ],
@@ -2480,39 +2498,70 @@ class _ContestCardState extends State<ContestCard> {
                                           ],
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
 
-                                      const SizedBox(height: 12),
+                              const SizedBox(height: 12),
 
-                                      // Add Team Button
-                                      SizedBox(
-                                        width: double.infinity,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            // TODO: Add team
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                                const Color(0xFFF6F9FF),
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              side: BorderSide(
-                                                  color: Colors.grey[300]!),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            "ADD TEAM ₹${widget.contest['entry'] ?? '49'}",
-                                            style: const TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 0.5,
-                                            ),
-                                          ),
+                              // Add Team Button
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    // Navigate to Create Team Screen
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => M11_CreateTeamScreen(
+                                          source: 'add_team_to_contest',
+                                          contest: widget.contest,
+                                          contestId: widget.contest['id']?.toString() ?? 'contest_001',
                                         ),
                                       ),
-                                    ],
-                                  )),
+                                    );
+                                    
+                                    // If team was created successfully, switch to My Teams tab and show join contest
+                                    if (result == true) {
+                                      // Switch to My Teams tab (index 2)
+                                      if (context.mounted) {
+                                        final contestDetailsScreen = context.findAncestorStateOfType<_ContestDetailsScreenState>();
+                                        if (contestDetailsScreen != null) {
+                                          contestDetailsScreen._tabController?.animateTo(2);
+                                          contestDetailsScreen.setState(() {});
+                                        }
+                                        
+                                        // Wait a bit for tab switch animation, then show join contest bottom sheet
+                                        Future.delayed(Duration(milliseconds: 300), () {
+                                          if (context.mounted && contestDetailsScreen != null) {
+                                            contestDetailsScreen!._showJoinContestConfirmation(
+                                              widget.contest, 
+                                              widget.contest['id']?.toString() ?? 'contest_001'
+                                            );
+                                          }
+                                        });
+                                      }
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFF6F9FF),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    side: BorderSide(color: Colors.grey[300]!),
+                                  ),
+                                  child: Text(
+                                    "ADD TEAM ₹${widget.contest['entry'] ?? '49'}",
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ],

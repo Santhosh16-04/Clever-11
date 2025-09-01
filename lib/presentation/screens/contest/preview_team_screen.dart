@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'backup_screen.dart';
+import '../../widgets/network_image_loader.dart';
+import '../../../utils/connectivity_utils.dart';
 
 class PreviewTeamScreen extends StatefulWidget {
   final List<Map<String, dynamic>> selectedPlayers;
@@ -78,7 +77,11 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
                           children: [
                             IconButton(
                               icon: Icon(Icons.close, color: Colors.white),
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+                                context,
+                                () => Navigator.pop(context),
+                                customMessage: 'Internet required to close preview',
+                              ),
                             ),
                             Expanded(
                               child: Center(
@@ -178,7 +181,11 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
                                     ),
                                     SizedBox(height: 16),
                                     ElevatedButton(
-                                      onPressed: () => Navigator.pop(context),
+                                      onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+                                        context,
+                                        () => Navigator.pop(context),
+                                        customMessage: 'Internet required to start selecting players',
+                                      ),
                                       child: Text("START SELECTING"),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,
@@ -245,8 +252,37 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
       child: Column(
         children: [
           CircleAvatar(
-            backgroundImage: AssetImage(player['image']),
             radius: 25,
+            backgroundColor: Colors.grey[700],
+            child: ClipOval(
+              child: NetworkImageWithLoader(
+                imageUrl: player['image'] ?? '',
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                backgroundColor: Colors.grey[700],
+                placeholder: Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.grey[700],
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+                errorWidget: Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.grey[700],
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+              ),
+            ),
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -310,7 +346,11 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
                   child: InkWell(
-                    onTap: widget.onBenchAction ?? _openBackupsScreen,
+                    onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                      context,
+                      widget.onBenchAction ?? _openBackupsScreen,
+                      customMessage: 'Internet required to access backups',
+                    ),
                     borderRadius: BorderRadius.circular(20),
                     child: CircleAvatar(
                       radius: 18,
@@ -329,11 +369,15 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
               final bool isSelected = _selectedBenchIndex == index;
               return InkWell(
                 borderRadius: BorderRadius.circular(16),
-                onTap: () {
-                  setState(() {
-                    _selectedBenchIndex = index;
-                  });
-                },
+                onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    setState(() {
+                      _selectedBenchIndex = index;
+                    });
+                  },
+                  customMessage: 'Internet required to select bench player',
+                ),
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 6),
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -362,8 +406,36 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
                       const SizedBox(width: 8),
                       CircleAvatar(
                         radius: 12,
-                        backgroundImage: AssetImage(p['image']),
                         backgroundColor: Colors.grey[700],
+                        child: ClipOval(
+                          child: NetworkImageWithLoader(
+                            imageUrl: p['image'] ?? '',
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.cover,
+                            backgroundColor: Colors.grey[700],
+                            placeholder: Container(
+                              width: 24,
+                              height: 24,
+                              color: Colors.grey[700],
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                            ),
+                            errorWidget: Container(
+                              width: 24,
+                              height: 24,
+                              color: Colors.grey[700],
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 6),
                       ConstrainedBox(
@@ -434,7 +506,11 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => Navigator.pop(ctx),
+                          onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                            ctx,
+                            () => Navigator.pop(ctx),
+                            customMessage: 'Internet required to close modal',
+                          ),
                           child: const Icon(Icons.keyboard_arrow_down, color: Colors.white70),
                         ),
                       ],
@@ -452,12 +528,16 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
 
                           return InkWell(
                             borderRadius: BorderRadius.circular(12),
-                            onTap: () {
-                              setState(() {
-                                _selectedBenchIndex = index;
-                              });
-                              setModalState(() {});
-                            },
+                            onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                              context,
+                              () {
+                                setState(() {
+                                  _selectedBenchIndex = index;
+                                });
+                                setModalState(() {});
+                              },
+                              customMessage: 'Internet required to select player',
+                            ),
                             child: Container(
                               width: 130,
                               margin: const EdgeInsets.symmetric(horizontal: 6),
@@ -512,8 +592,36 @@ class _PreviewTeamScreenState extends State<PreviewTeamScreen> {
                                     children: [
                                       CircleAvatar(
                                         radius: 16,
-                                        backgroundImage: AssetImage(p['image']),
                                         backgroundColor: Colors.grey[700],
+                                        child: ClipOval(
+                                          child: NetworkImageWithLoader(
+                                            imageUrl: p['image'] ?? '',
+                                            width: 32,
+                                            height: 32,
+                                            fit: BoxFit.cover,
+                                            backgroundColor: Colors.grey[700],
+                                            placeholder: Container(
+                                              width: 32,
+                                              height: 32,
+                                              color: Colors.grey[700],
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                                size: 16,
+                                              ),
+                                            ),
+                                            errorWidget: Container(
+                                              width: 32,
+                                              height: 32,
+                                              color: Colors.grey[700],
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                                size: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(width: 8),
                                       Expanded(

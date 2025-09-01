@@ -8,6 +8,7 @@ import 'package:clever_11/presentation/screens/contest/select_captain_screen.dar
 import 'preview_team_screen.dart';
 
 import '../../widgets/network_image_loader.dart';
+import '../../../utils/connectivity_utils.dart';
 
 class M11_CreateTeamScreen extends StatefulWidget {
   final Set<int>? initialSelectedPlayerIds;
@@ -102,28 +103,34 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
   }
 
   void _togglePlayer(int playerId, double credits, String team) {
-    setState(() {
-      if (selectedPlayerIds.contains(playerId)) {
-        // Remove player
-        selectedPlayerIds.remove(playerId);
-        selectedPlayers--;
-        teamCounts[team] = (teamCounts[team] ?? 1) - 1;
-      } else {
-        if (selectedPlayers == 11) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('You have already selected 11 players'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return;
-        }
-        // Add player
-        selectedPlayerIds.add(playerId);
-        selectedPlayers++;
-        teamCounts[team] = (teamCounts[team] ?? 0) + 1;
-      }
-    });
+    ConnectivityUtils.checkConnectionAndExecute(
+      context,
+      () {
+        setState(() {
+          if (selectedPlayerIds.contains(playerId)) {
+            // Remove player
+            selectedPlayerIds.remove(playerId);
+            selectedPlayers--;
+            teamCounts[team] = (teamCounts[team] ?? 1) - 1;
+          } else {
+            if (selectedPlayers == 11) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('You have already selected 11 players'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              return;
+            }
+            // Add player
+            selectedPlayerIds.add(playerId);
+            selectedPlayers++;
+            teamCounts[team] = (teamCounts[team] ?? 0) + 1;
+          }
+        });
+      },
+      customMessage: 'Internet required to select/deselect player',
+    );
   }
 
   Widget buildFilterRow() {
@@ -193,16 +200,20 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
             return Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (sortBy == filter['key']) {
-                      sortAsc = !sortAsc;
-                    } else {
-                      sortBy = filter['key']!;
-                      sortAsc = false;
-                    }
-                  });
-                },
+                onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    setState(() {
+                      if (sortBy == filter['key']) {
+                        sortAsc = !sortAsc;
+                      } else {
+                        sortBy = filter['key']!;
+                        sortAsc = false;
+                      }
+                    });
+                  },
+                  customMessage: 'Internet required to change filter',
+                ),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 2),
                   decoration: BoxDecoration(
@@ -1050,25 +1061,29 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(25),
-                onTap: () {
-                  final selectedPlayersList = players
-                      .where((p) => selectedPlayerIds.contains(p['id']))
-                      .cast<Map<String, dynamic>>()
-                      .toList();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PreviewTeamScreen(
-                        selectedPlayers: selectedPlayersList,
-                        creditsLeft: creditsLeft,
-                        team1: match['team1'],
-                        team2: match['team2'],
-                        team1Count: teamCounts[match['team1']] ?? 0,
-                        team2Count: teamCounts[match['team2']] ?? 0,
+                onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    final selectedPlayersList = players
+                        .where((p) => selectedPlayerIds.contains(p['id']))
+                        .cast<Map<String, dynamic>>()
+                        .toList();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PreviewTeamScreen(
+                          selectedPlayers: selectedPlayersList,
+                          creditsLeft: creditsLeft,
+                          team1: match['team1'],
+                          team2: match['team2'],
+                          team1Count: teamCounts[match['team1']] ?? 0,
+                          team2Count: teamCounts[match['team2']] ?? 0,
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                  customMessage: 'Internet required to preview team',
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -1102,25 +1117,29 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
               child: InkWell(
                 borderRadius: BorderRadius.circular(25),
                 onTap: selectedPlayerIds.length == 11
-                    ? () {
-                        final selectedPlayersList = players
-                            .where((p) => selectedPlayerIds.contains(p['id']))
-                            .toList();
-                        Navigator.push(
+                    ? () => ConnectivityUtils.checkConnectionAndExecute(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectCaptainScreen(
-                              players: selectedPlayersList,
-                              initialCaptainId: widget.initialCaptainId,
-                              initialViceCaptainId: widget.initialViceCaptainId,
-                              teamId: widget.teamId,
-                              source: widget.source,
-                              contest: widget.contest,
-                              contestId: widget.contestId,
-                            ),
-                          ),
-                        );
-                      }
+                          () {
+                            final selectedPlayersList = players
+                                .where((p) => selectedPlayerIds.contains(p['id']))
+                                .toList();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SelectCaptainScreen(
+                                  players: selectedPlayersList,
+                                  initialCaptainId: widget.initialCaptainId,
+                                  initialViceCaptainId: widget.initialViceCaptainId,
+                                  teamId: widget.teamId,
+                                  source: widget.source,
+                                  contest: widget.contest,
+                                  contestId: widget.contestId,
+                                ),
+                              ),
+                            );
+                          },
+                          customMessage: 'Internet required to proceed to captain selection',
+                        )
                     : null,
                 child: Center(
                   child: Text(
@@ -1519,23 +1538,31 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
               RadioListTile<String>(
                 value: 'credits',
                 groupValue: playerStatFilter,
-                onChanged: (val) {
-                  setState(() {
-                    playerStatFilter = val!;
-                  });
-                  Navigator.of(context).pop();
-                },
+                onChanged: (val) => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    setState(() {
+                      playerStatFilter = val!;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  customMessage: 'Internet required to change player stat filter',
+                ),
                 title: Text('Credits'),
               ),
               RadioListTile<String>(
                 value: 'captain_percent',
                 groupValue: playerStatFilter,
-                onChanged: (val) {
-                  setState(() {
-                    playerStatFilter = val!;
-                  });
-                  Navigator.of(context).pop();
-                },
+                onChanged: (val) => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    setState(() {
+                      playerStatFilter = val!;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  customMessage: 'Internet required to change player stat filter',
+                ),
                 title: Text('% Captain By  |  % C'),
               ),
               Divider(height: 24, thickness: 1),
@@ -1550,12 +1577,16 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
               RadioListTile<String>(
                 value: 'points',
                 groupValue: playerStatFilter,
-                onChanged: (val) {
-                  setState(() {
-                    playerStatFilter = val!;
-                  });
-                  Navigator.of(context).pop();
-                },
+                onChanged: (val) => ConnectivityUtils.checkConnectionAndExecute(
+                  context,
+                  () {
+                    setState(() {
+                      playerStatFilter = val!;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  customMessage: 'Internet required to change player stat filter',
+                ),
                 title: Text('Points'),
               ),
             ],
@@ -1625,14 +1656,18 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                     ),
                     padding: EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      selectedPlayerIds.clear();
-                      selectedPlayers = 0;
-                      teamCounts.updateAll((key, value) => 0);
-                    });
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+                    context,
+                    () {
+                      setState(() {
+                        selectedPlayerIds.clear();
+                        selectedPlayers = 0;
+                        teamCounts.updateAll((key, value) => 0);
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    customMessage: 'Internet required to clear team',
+                  ),
                   child: Text(
                     'YES, CLEAR',
                     style: TextStyle(
@@ -1655,9 +1690,11 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
                     ),
                     padding: EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: () => ConnectivityUtils.checkConnectionAndExecute(
+                    context,
+                    () => Navigator.of(context).pop(),
+                    customMessage: 'Internet required to cancel',
+                  ),
                   child: Text(
                     'CANCEL',
                     style: TextStyle(
@@ -1703,8 +1740,12 @@ class _M11_CreateTeamScreenState extends State<M11_CreateTeamScreen>
     bool isSelected = selectedPlayerIds.contains(player['id']);
     final bool isExpanded = expandedPlayerId == player['id'];
     return InkWell(
-      onTap: () => _togglePlayer(
-          player['id'], _parseDouble(player['credits']), player['team']),
+      onTap: () => ConnectivityUtils.checkConnectionAndExecute(
+        context,
+        () => _togglePlayer(
+            player['id'], _parseDouble(player['credits']), player['team']),
+        customMessage: 'Internet required to select player',
+      ),
       child: Column(
         children: [
           Container(

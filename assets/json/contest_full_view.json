@@ -6,6 +6,7 @@
     "wallet_balance": 49
   },
   "contest": {
+    "id": "contest_001",
     "guaranteed": true,
     "plus": true,
     "prize_pool": "₹14 Crores",
